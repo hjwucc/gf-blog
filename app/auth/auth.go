@@ -8,7 +8,7 @@ import (
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/os/glog"
 	"github.com/gogf/gf/util/gvalid"
-	"go-gf-blog/app/dao"
+	"go-gf-blog/app/model/user"
 	"time"
 )
 
@@ -73,7 +73,7 @@ func IdentityHandler(r *ghttp.Request) interface{} {
 // Unauthorized is used to define customized Unauthorized callback function.
 func Unauthorized(r *ghttp.Request, code int, message string) {
 	r.Response.WriteJson(g.Map{
-		"code": code,
+		"code": 0,
 		"msg":  message,
 	})
 	r.ExitAll()
@@ -116,7 +116,7 @@ func Authenticator(r *ghttp.Request) (interface{}, error) {
 		return "", jwt.ErrFailedAuthentication
 	}
 	//从数据库读取用户数据并验证
-	user, err := dao.User.FindOne("passport=? and password=?", data["passport"], gsha1.Encrypt(data["password"]))
+	user, err := user.Model.FindOne("passport=? and password=?", data["passport"], gsha1.Encrypt(data["password"]))
 	if err != nil {
 		return "", errors.New("用户名或密码错误")
 	}

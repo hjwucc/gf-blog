@@ -2,7 +2,7 @@ module go-gf-blog
 
 require (
 	github.com/gogf/gf v1.14.6-0.20201214132204-c685876e6f67
-	github.com/gogf/gf-demos v0.0.0-20201214132547-168e049e5852 // indirect
+	github.com/gogf/gf-demos v0.0.0-20201214132547-168e049e5852
 	github.com/gogf/gf-jwt v1.1.0
 	github.com/gogf/swagger v1.2.0
 	github.com/gorilla/websocket v1.4.2 // indirect
