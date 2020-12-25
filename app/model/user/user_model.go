@@ -25,19 +25,19 @@ var (
 	Model = &arModel{g.DB("default").Table(Table).Safe()}
 	// Columns defines and stores column names for table user.
 	Columns = struct {
-		Id        string // 用户ID    
-        Passport  string // 用户账号  
-        Password  string // 用户密码  
-        Nickname  string // 用户昵称  
-        CreateAt  string // 创建时间  
-        UpdateAt  string // 更新时间
+		Id        string // 用户ID
+        Passport  string // 用户账号
+        Password  string // 用户密码
+        Nickname  string // 用户昵称
+        CreatedAt  string // 创建时间
+        UpdatedAt  string // 更新时间
 	}{
-		Id:       "id",         
-        Passport: "passport",   
-        Password: "password",   
-        Nickname: "nickname",   
-        CreateAt: "create_at",  
-        UpdateAt: "update_at",
+		Id:       "id",
+        Passport: "passport",
+        Password: "password",
+        Nickname: "nickname",
+        CreatedAt: "created_at",
+        UpdatedAt: "updated_at",
 	}
 )
 
