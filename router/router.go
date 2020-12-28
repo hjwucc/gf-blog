@@ -18,6 +18,7 @@ func init() {
 		group.ALL("/article/get",api.Article.Get)
 		group.ALL("/article/conditionGetList",api.Article.ConditionGetList)
 		group.ALL("/category/conditionGetList",api.Category.ConditionQueryList)
+		group.ALL("/link/conditionGetList",api.Link.ConditionPageList)
 		group.Middleware(service.Middleware.CORS,service.Middleware.MiddlewareAuth)
 		group.ALL("/user/refreshToken",auth.GfJWTMiddleware.RefreshHandler)
 		group.ALL("/user",api.User)
@@ -27,5 +28,8 @@ func init() {
 		group.ALL("/category/add",api.Category.Add)
 		group.ALL("/category/delete/{id}",api.Category.Delete)
 		group.ALL("/category/edit/{id}",api.Category.Edit)
+		group.ALL("/link/add",api.Link.Add)
+		group.ALL("/link/edit/{id}",api.Link.Edit)
+		group.ALL("/link/delete/{id}",api.Link.Delete)
 	})
 }

@@ -3,7 +3,7 @@ package api
 import (
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/util/gconv"
-	"go-gf-blog/app/model/user"
+	"go-gf-blog/app/model"
 	"go-gf-blog/app/service"
 	"go-gf-blog/library/response"
 )
@@ -21,8 +21,8 @@ type apiUser struct{}
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiUser) SignUp(r *ghttp.Request) {
 	var (
-		apiReq     *user.ApiUserSignUpReq
-		serviceReq *user.ServiceUserSignUpReq
+		apiReq     *model.ApiUserSignUpReq
+		serviceReq *model.ServiceUserSignUpReq
 	)
 	if err := r.ParseForm(&apiReq); err != nil {
 		response.JsonExit(r, 1, err.Error())
@@ -45,7 +45,7 @@ func (a *apiUser) SignUp(r *ghttp.Request) {
 // @success 200 {object} response.JsonResponse "执行结果:`true/false`"
 func (a *apiUser) CheckPassport(r *ghttp.Request) {
 	var (
-		data *user.ApiUserCheckPassportReq
+		data *model.ApiUserCheckPassportReq
 	)
 	if err := r.Parse(&data); err != nil {
 		response.JsonExit(r, 1, err.Error())
@@ -64,7 +64,7 @@ func (a *apiUser) CheckPassport(r *ghttp.Request) {
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiUser) CheckNickName(r *ghttp.Request) {
 	var (
-		data *user.ApiUserCheckNickNameReq
+		data *model.ApiUserCheckNickNameReq
 	)
 	if err := r.Parse(&data); err != nil {
 		response.JsonExit(r, 1, err.Error())

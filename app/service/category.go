@@ -6,7 +6,9 @@ import (
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/os/gtime"
-	"go-gf-blog/app/model/categories"
+	"github.com/gogf/gf/util/gconv"
+	"go-gf-blog/app/dao"
+	"go-gf-blog/app/model"
 )
 
 var Category = new(serviceCategory)
@@ -15,8 +17,8 @@ type serviceCategory struct {
 }
 
 // 根据条件查询，若没有传参数则是查询所有分类
-func (a *serviceCategory) ConditionQueryList(req *categories.ApiQueryReq) (res gdb.Result, err error) {
-	model := g.DB().Table(categories.Table + " a")
+func (a *serviceCategory) ConditionQueryList(req *model.ApiQueryCategoriesReq) (res gdb.Result, err error) {
+	model := g.DB().Table(dao.Categories.Table + " a")
 	if req.Id == 0 && req.Status == 0 {
 		res, err = model.FindAll()
 		if err != nil {
@@ -41,14 +43,14 @@ func (a *serviceCategory) ConditionQueryList(req *categories.ApiQueryReq) (res g
 }
 
 // 增加分类
-func (a *serviceCategory) Add(req *categories.ApiAddReq) (res sql.Result, err error) {
-	categoryEntity := &categories.Entity{}
+func (a *serviceCategory) Add(req *model.ApiAddCategoryReq) (res sql.Result, err error) {
+	categoryEntity := &model.Categories{}
 	categoryEntity.Status = req.Status
 	categoryEntity.UpdatedAt = gtime.Now()
 	categoryEntity.CreatedAt = gtime.Now()
 	categoryEntity.Name = req.Name
 	categoryEntity.Sort = req.Sort
-	res, err = categories.Model.Insert(categoryEntity)
+	res, err = dao.Categories.Insert(categoryEntity)
 	if err != nil {
 		err = gerror.New("增加文章分类失败")
 		return
@@ -57,19 +59,20 @@ func (a *serviceCategory) Add(req *categories.ApiAddReq) (res sql.Result, err er
 }
 
 // 编辑分类
-func (a *serviceCategory) Edit(id int, req *categories.ApiAddReq) (res sql.Result, err error) {
-	entity, err := categories.Model.FindOne("id", id)
-	if err != nil {
-		err = gerror.New("查询分类失败")
-		return
-	}
+func (a *serviceCategory) Edit(id int, req *model.ApiAddCategoryReq) (res sql.Result, err error) {
+	entity := &model.Categories{}
 	entity.Sort = req.Sort
 	entity.Name = req.Name
 	entity.UpdatedAt = gtime.Now()
 	entity.Status = req.Status
-	res, err = categories.Model.Replace(entity)
-	if err != nil {
+	res, err = dao.Categories.Update(gconv.Map(entity), "id", id)
+	if res == nil || err != nil {
 		err = gerror.New("编辑分类失败")
+		return
+	}
+
+	if affected, _ := res.RowsAffected(); affected == 0 {
+		err = gerror.New("分类ID不存在")
 		return
 	}
 	return
@@ -77,7 +80,7 @@ func (a *serviceCategory) Edit(id int, req *categories.ApiAddReq) (res sql.Resul
 
 // 删除分类
 func (a *serviceCategory) Delete(id int) (res sql.Result, err error) {
-	res, err = categories.Model.Delete("id", id)
+	res, err = dao.Categories.Delete("id", id)
 	if err != nil {
 		err = gerror.New("删除分类失败")
 		return

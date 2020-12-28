@@ -7,8 +7,9 @@ import (
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/os/gtime"
-	"go-gf-blog/app/model/articles"
-	"go-gf-blog/app/model/categories"
+	"github.com/gogf/gf/util/gconv"
+	"go-gf-blog/app/dao"
+	"go-gf-blog/app/model"
 )
 
 var Article = new(serviceArticle)
@@ -17,34 +18,34 @@ type serviceArticle struct {
 }
 
 // 根据文章ID查找
-func (a *serviceArticle) Get(id int) (articleEntity *articles.Entity, err error) {
-	articleEntity, err = articles.Model.FindOne("id", id)
+func (a *serviceArticle) Get(id int) (articleEntity *model.Articles, err error) {
+	articleEntity, err = dao.Articles.FindOne("id", id)
 	return
 }
 
-// 根据条件查找
-func (a *serviceArticle) ConditionGetList(req *articles.ApiArticlesListReq) (totalCount int, pageList gdb.Result, err error) {
-	model := g.DB().Table(articles.Table + " a")
+// 根据条件分页查找
+func (a *serviceArticle) ConditionPageList(req *model.ApiArticlesListReq) (totalCount int, pageList gdb.Result, err error) {
+	M := g.DB().Table(dao.Articles.Table + " a")
 	if req.CategoryId != 0 {
-		model = model.Where("a.category_id", req.CategoryId)
+		M = M.Where("a.category_id", req.CategoryId)
 	}
 	if req.Keywords != "" {
-		model = model.Where("a.title like ?", fmt.Sprintf("%%%s%%", req.Keywords))
+		M = M.Where("a.title like ?", fmt.Sprintf("%%%s%%", req.Keywords))
 	}
 	if req.Status > -1 {
-		model = model.Where("a.status", req.Status)
+		M = M.Where("a.status", req.Status)
 	}
-	totalCount, err = model.Count()
+	totalCount, err = M.Count()
 	if err != nil {
 		err = gerror.New("按条件查询所有文章失败")
 		return
 	}
 	if req.PageSize == 0 {
-		req.PageSize = articles.PageSize
+		req.PageSize = 10
 	}
 
-	pageList, err = model.
-		InnerJoin(categories.Table+" c", "a.category_id = c.id").
+	pageList, err = M.
+		InnerJoin(dao.Articles.Table+" c", "a.category_id = c.id").
 		Fields("a.*,c.name category_name").
 		Page(req.PageNum, req.PageSize).
 		Order("a.created_at desc").
@@ -60,8 +61,8 @@ func (a *serviceArticle) ConditionGetList(req *articles.ApiArticlesListReq) (tot
 }
 
 // 添加文章
-func (a *serviceArticle) Add(req *articles.ApiAddReq) (res sql.Result, err error) {
-	articleEntity := &articles.Entity{}
+func (a *serviceArticle) Add(req *model.ApiAddArticleReq) (res sql.Result, err error) {
+	articleEntity := &model.Articles{}
 	articleEntity.Status = req.Status
 	articleEntity.CategoryId = req.CategoryId
 	articleEntity.Content = req.Content
@@ -73,7 +74,7 @@ func (a *serviceArticle) Add(req *articles.ApiAddReq) (res sql.Result, err error
 	articleEntity.Summary = req.Summary
 	articleEntity.Tags = req.Tags
 	articleEntity.Cover = req.Cover
-	res, err = articles.Model.Insert(articleEntity)
+	res, err = dao.Articles.Insert(articleEntity)
 	if err != nil {
 		err = gerror.New("添加文章失败")
 		return
@@ -82,12 +83,8 @@ func (a *serviceArticle) Add(req *articles.ApiAddReq) (res sql.Result, err error
 }
 
 // 修改文章
-func (a *serviceArticle) Edit(id int, req *articles.ApiAddReq) (result sql.Result, err error) {
-	articleEntity, err := a.Get(id)
-	if err != nil {
-		err = gerror.New("要修改的文章已不存在")
-		return
-	}
+func (a *serviceArticle) Edit(id int, req *model.ApiAddArticleReq) (result sql.Result, err error) {
+	articleEntity := &model.Articles{}
 	articleEntity.Status = req.Status
 	articleEntity.CategoryId = req.CategoryId
 	articleEntity.Content = req.Content
@@ -98,9 +95,14 @@ func (a *serviceArticle) Edit(id int, req *articles.ApiAddReq) (result sql.Resul
 	articleEntity.Summary = req.Summary
 	articleEntity.Tags = req.Tags
 	articleEntity.Cover = req.Cover
-	result, err = articles.Model.Replace(articleEntity)
-	if err != nil {
+	result, err = dao.Articles.Update(gconv.Map(articleEntity), "id", id)
+	if result == nil || err != nil {
 		err = gerror.New("修改文章失败")
+		return
+	}
+
+	if affected, _ := result.RowsAffected(); affected == 0 {
+		err = gerror.New("文章ID不存在")
 		return
 	}
 	return
@@ -108,7 +110,7 @@ func (a *serviceArticle) Edit(id int, req *articles.ApiAddReq) (result sql.Resul
 
 // 删除文章
 func (a *serviceArticle) Delete(id int) (result sql.Result, err error) {
-	result, err = articles.Model.Delete("id", id)
+	result, err = dao.Articles.Delete("id", id)
 	if err != nil {
 		err = gerror.New("删除文章失败，请联系管理员")
 		return
