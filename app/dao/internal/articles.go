@@ -33,10 +33,13 @@ type articlesColumns struct {
     Cover       string // 文章封面                       
     Content     string // 文章内容                       
     MdContent   string // 文章markdown内容               
+    Author      string // 作者                           
+    ClickCount  string // 文章点击数                     
+    IsTop       string // 文章置顶:0-不置顶/1-置顶       
     From        string // 文章来源:0-原创/1-转载/2-其他  
     Status      string // 文章状态:1-发布/2-草稿/3-隐藏  
-    CreatedAt   string //                                
-    UpdatedAt   string //
+    CreatedAt   string // 创建时间                       
+    UpdatedAt   string // 更新时间
 }
 
 var (
@@ -53,6 +56,9 @@ var (
             Cover:      "cover",        
             Content:    "content",      
             MdContent:  "md_content",   
+            Author:     "author",       
+            ClickCount: "click_count",  
+            IsTop:      "is_top",       
             From:       "from",         
             Status:     "status",       
             CreatedAt:  "created_at",   

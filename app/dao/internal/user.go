@@ -25,12 +25,18 @@ type UserDao struct {
 
 // UserColumns defines and stores column names for table user.
 type userColumns struct {
-	Id         string // 用户ID    
-    Passport   string // 用户账号  
-    Password   string // 用户密码  
-    Nickname   string // 用户昵称  
-    CreatedAt  string // 创建时间  
-    UpdatedAt  string // 更新时间
+	Id             string // 用户ID        
+    Passport       string // 用户账号      
+    Password       string // 用户密码      
+    Nickname       string // 用户昵称      
+    Email          string // 邮箱          
+    Summary        string // 自我简介      
+    Avatar         string // 头像地址      
+    WeChat         string // 微信号        
+    LastLoginTime  string // 最后登录时间  
+    LastLoginIp    string // 最后登录IP    
+    CreatedAt      string // 创建时间      
+    UpdatedAt      string // 更新时间
 }
 
 var (
@@ -39,12 +45,18 @@ var (
 		M:     g.DB("default").Table("user").Safe(),
 		Table: "user",
 		Columns: userColumns{
-			Id:        "id",          
-            Passport:  "passport",    
-            Password:  "password",    
-            Nickname:  "nickname",    
-            CreatedAt: "created_at",  
-            UpdatedAt: "updated_at",
+			Id:            "id",               
+            Passport:      "passport",         
+            Password:      "password",         
+            Nickname:      "nickname",         
+            Email:         "email",            
+            Summary:       "summary",          
+            Avatar:        "avatar",           
+            WeChat:        "we_chat",          
+            LastLoginTime: "last_login_time",  
+            LastLoginIp:   "last_login_ip",    
+            CreatedAt:     "created_at",       
+            UpdatedAt:     "updated_at",
 		},
 	}
 )

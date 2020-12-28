@@ -25,13 +25,13 @@ type LinkDao struct {
 
 // LinkColumns defines and stores column names for table link.
 type linkColumns struct {
-	Id         string //   
-    LinkName   string //   
-    LinkUrl    string //   
-    IconUrl    string //   
-    Sort       string //   
-    CreatedAt  string //   
-    UpdatedAt  string //
+	Id         string //               
+    LinkName   string // 链接名称      
+    LinkUrl    string // 链接url       
+    IconUrl    string // 链接图标地址  
+    Sort       string // 链接排序      
+    CreatedAt  string // 创建时间      
+    UpdatedAt  string // 更新时间
 }
 
 var (

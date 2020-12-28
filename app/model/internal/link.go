@@ -10,11 +10,11 @@ import (
 
 // Link is the golang structure for table link.
 type Link struct {
-    Id        int         `orm:"id,primary" json:"id"         c:"-"`         //
-    LinkName  string      `orm:"link_name"  json:"link_name"  c:"link_name"`  //
-    LinkUrl   string      `orm:"link_url"   json:"link_url"   c:"link_url"`   //
-    IconUrl   string      `orm:"icon_url"   json:"icon_url"   c:"icon_url"`   //
-    Sort      int         `orm:"sort"       json:"sort"       c:"sort"`       //
-    CreatedAt *gtime.Time `orm:"created_at" json:"created_at" c:"created_at"` //
-    UpdatedAt *gtime.Time `orm:"updated_at" json:"updated_at" c:"updated_at"` //
+    Id        int         `orm:"id,primary" json:"id"         c:"-"`          // 链接ID
+    LinkName  string      `orm:"link_name"  json:"link_name"  c:"link_name"`  // 链接名称
+    LinkUrl   string      `orm:"link_url"   json:"link_url"   c:"link_url"`   // 链接url
+    IconUrl   string      `orm:"icon_url"   json:"icon_url"   c:"icon_url"`   // 链接图标地址
+    Sort      int         `orm:"sort"       json:"sort"       c:"sort"`       // 链接排序
+    CreatedAt *gtime.Time `orm:"created_at" json:"created_at" c:"created_at"` // 创建时间
+    UpdatedAt *gtime.Time `orm:"updated_at" json:"updated_at" c:"updated_at"` // 更新时间
 }

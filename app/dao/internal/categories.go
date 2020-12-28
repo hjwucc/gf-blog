@@ -28,9 +28,10 @@ type categoriesColumns struct {
 	Id         string //                         
     Name       string // 栏目名称                
     Sort       string // 栏目排序                
+    ParentId   string // 父级栏目ID              
     Status     string // 栏目状态:0-正常/1-隐藏  
-    CreatedAt  string //                         
-    UpdatedAt  string //
+    CreatedAt  string // 创建时间                
+    UpdatedAt  string // 更新时间
 }
 
 var (
@@ -42,6 +43,7 @@ var (
 			Id:        "id",          
             Name:      "name",        
             Sort:      "sort",        
+            ParentId:  "parent_id",   
             Status:    "status",      
             CreatedAt: "created_at",  
             UpdatedAt: "updated_at",

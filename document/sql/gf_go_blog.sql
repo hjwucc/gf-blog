@@ -30,12 +30,13 @@ CREATE TABLE `articles`  (
   `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '文章封面',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '文章内容',
   `md_content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文章markdown内容',
+  `author` varchar(255) DEFAULT NULL COMMENT '作者',
   `click_count` int(11) NULL DEFAULT 1 COMMENT '文章点击数',
   `is_top` tinyint(1) NULL DEFAULT 0 COMMENT '文章置顶:0-不置顶/1-置顶',
   `from` tinyint(1) NOT NULL DEFAULT 0 COMMENT '文章来源:0-原创/1-转载/2-其他',
   `status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '文章状态:1-发布/2-草稿/3-隐藏',
-  `created_at` timestamp(0) NOT NULL COMMENT '创建时间',
-  `updated_at` timestamp(0) NOT NULL COMMENT '更新时间',
+  `created_at` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
@@ -49,8 +50,8 @@ CREATE TABLE `categories`  (
   `sort` int(11) NULL DEFAULT 1 COMMENT '栏目排序',
   `parent_id` int(11) NULL DEFAULT NULL COMMENT '父级栏目ID',
   `status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '栏目状态:0-正常/1-隐藏',
-  `created_at` timestamp(0) NOT NULL COMMENT '创建时间',
-  `updated_at` timestamp(0) NOT NULL COMMENT '更新时间',
+  `created_at` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
@@ -64,8 +65,8 @@ CREATE TABLE `link`  (
   `link_url` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '链接url',
   `icon_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '链接图标地址',
   `sort` int(11) NULL DEFAULT 1 COMMENT '链接排序',
-  `created_at` timestamp(0) NOT NULL COMMENT '创建时间',
-  `updated_at` timestamp(0) NOT NULL COMMENT '更新时间',
+  `created_at` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
@@ -84,8 +85,8 @@ CREATE TABLE `user`  (
   `we_chat` varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '微信号',
   `last_login_time` timestamp(0) NOT NULL COMMENT '最后登录时间',
   `last_login_ip` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '最后登录IP',
-  `created_at` timestamp(0) NOT NULL COMMENT '创建时间',
-  `updated_at` timestamp(0) NOT NULL COMMENT '更新时间',
+  `created_at` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP  COMMENT '创建时间',
+  `updated_at` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 

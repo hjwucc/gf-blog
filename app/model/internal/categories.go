@@ -10,10 +10,11 @@ import (
 
 // Categories is the golang structure for table categories.
 type Categories struct {
-    Id        uint        `orm:"id,primary" json:"id"         c:"-"`         //
+    Id        uint        `orm:"id,primary" json:"id"         c:"-"`          // 栏目ID
     Name      string      `orm:"name"       json:"name"       c:"name"`       // 栏目名称
     Sort      int         `orm:"sort"       json:"sort"       c:"sort"`       // 栏目排序
+    ParentId  int         `orm:"parent_id"  json:"parent_id"  c:"parent_id"`  // 父级栏目ID
     Status    int         `orm:"status"     json:"status"     c:"status"`     // 栏目状态:0-正常/1-隐藏
-    CreatedAt *gtime.Time `orm:"created_at" json:"created_at" c:"created_at"` //
-    UpdatedAt *gtime.Time `orm:"updated_at" json:"updated_at" c:"updated_at"` //
+    CreatedAt *gtime.Time `orm:"created_at" json:"created_at" c:"created_at"` // 创建时间
+    UpdatedAt *gtime.Time `orm:"updated_at" json:"updated_at" c:"updated_at"` // 更新时间
 }
