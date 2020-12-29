@@ -31,4 +31,6 @@ type ApiAddArticleReq struct {
 	Status     int    `p:"status"      v:"required#请设置文章状态"`
 	Content    string `p:"content"     v:"required#请填写文章内容"`
 	MdContent  string `p:"md_content"  v:"required#Markdown内容错误"`
+	Author     string `p:"author"`
+	IsTop      int    `p:"is_top"`
 }

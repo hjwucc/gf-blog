@@ -69,11 +69,13 @@ func (a *serviceArticle) Add(req *model.ApiAddArticleReq) (res sql.Result, err e
 	articleEntity.CreatedAt = gtime.Now()
 	articleEntity.UpdatedAt = gtime.Now()
 	articleEntity.From = req.From
-	articleEntity.Content = req.Content
+	articleEntity.Title = req.Title
 	articleEntity.MdContent = req.MdContent
 	articleEntity.Summary = req.Summary
 	articleEntity.Tags = req.Tags
 	articleEntity.Cover = req.Cover
+	articleEntity.Author = req.Author
+	articleEntity.IsTop = req.IsTop
 	res, err = dao.Articles.Insert(articleEntity)
 	if err != nil {
 		err = gerror.New("添加文章失败")
@@ -90,11 +92,13 @@ func (a *serviceArticle) Edit(id int, req *model.ApiAddArticleReq) (result sql.R
 	articleEntity.Content = req.Content
 	articleEntity.UpdatedAt = gtime.Now()
 	articleEntity.From = req.From
-	articleEntity.Content = req.Content
+	articleEntity.Title = req.Title
 	articleEntity.MdContent = req.MdContent
 	articleEntity.Summary = req.Summary
 	articleEntity.Tags = req.Tags
 	articleEntity.Cover = req.Cover
+	articleEntity.Author = req.Author
+	articleEntity.IsTop = req.IsTop
 	result, err = dao.Articles.Update(gconv.Map(articleEntity), "id", id)
 	if result == nil || err != nil {
 		err = gerror.New("修改文章失败")

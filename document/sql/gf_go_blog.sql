@@ -22,7 +22,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `articles`;
 CREATE TABLE `articles`  (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '文章ID',
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '文章标题',
   `summary` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '文章简介绍',
   `category_id` int(11) NULL DEFAULT 1 COMMENT '文章栏目ID',
@@ -30,7 +30,7 @@ CREATE TABLE `articles`  (
   `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '文章封面',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '文章内容',
   `md_content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文章markdown内容',
-  `author` varchar(255) DEFAULT NULL COMMENT '作者',
+  `author` varchar(255) DEFAULT NULL COMMENT '文章作者',
   `click_count` int(11) NULL DEFAULT 1 COMMENT '文章点击数',
   `is_top` tinyint(1) NULL DEFAULT 0 COMMENT '文章置顶:0-不置顶/1-置顶',
   `from` tinyint(1) NOT NULL DEFAULT 0 COMMENT '文章来源:0-原创/1-转载/2-其他',
@@ -45,7 +45,7 @@ CREATE TABLE `articles`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories`  (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '栏目ID',
   `name` char(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '栏目名称',
   `sort` int(11) NULL DEFAULT 1 COMMENT '栏目排序',
   `parent_id` int(11) NULL DEFAULT NULL COMMENT '父级栏目ID',
@@ -60,7 +60,7 @@ CREATE TABLE `categories`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `link`;
 CREATE TABLE `link`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '链接ID',
   `link_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '链接名称',
   `link_url` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '链接url',
   `icon_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '链接图标地址',

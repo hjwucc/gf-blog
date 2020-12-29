@@ -526,6 +526,9 @@
         "model.ApiAddArticleReq": {
             "type": "object",
             "properties": {
+                "author": {
+                    "type": "string"
+                },
                 "categoryId": {
                     "type": "integer"
                 },
@@ -536,6 +539,9 @@
                     "type": "string"
                 },
                 "from": {
+                    "type": "integer"
+                },
+                "isTop": {
                     "type": "integer"
                 },
                 "mdContent": {
@@ -560,6 +566,9 @@
             "properties": {
                 "name": {
                     "type": "string"
+                },
+                "parentId": {
+                    "type": "integer"
                 },
                 "sort": {
                     "type": "integer"

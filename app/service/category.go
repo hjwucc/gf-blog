@@ -50,6 +50,7 @@ func (a *serviceCategory) Add(req *model.ApiAddCategoryReq) (res sql.Result, err
 	categoryEntity.CreatedAt = gtime.Now()
 	categoryEntity.Name = req.Name
 	categoryEntity.Sort = req.Sort
+	categoryEntity.ParentId = req.ParentId
 	res, err = dao.Categories.Insert(categoryEntity)
 	if err != nil {
 		err = gerror.New("增加文章分类失败")
@@ -65,6 +66,7 @@ func (a *serviceCategory) Edit(id int, req *model.ApiAddCategoryReq) (res sql.Re
 	entity.Name = req.Name
 	entity.UpdatedAt = gtime.Now()
 	entity.Status = req.Status
+	entity.ParentId = req.ParentId
 	res, err = dao.Categories.Update(gconv.Map(entity), "id", id)
 	if res == nil || err != nil {
 		err = gerror.New("编辑分类失败")

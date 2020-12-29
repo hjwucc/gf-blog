@@ -7,8 +7,10 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/os/glog"
+	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/util/gvalid"
 	"go-gf-blog/app/dao"
+	"go-gf-blog/library/utils"
 	"time"
 )
 
@@ -16,7 +18,7 @@ var (
 	// The underlying JWT middleware.
 	GfJWTMiddleware *jwt.GfJWTMiddleware
 	// Customized login parameter validation rules.
-	ValidationRules = g.Map {
+	ValidationRules = g.Map{
 		"username": "required",
 		"password": "required",
 	}
@@ -82,11 +84,11 @@ func Unauthorized(r *ghttp.Request, code int, message string) {
 // LoginResponse is used to define customized login-successful callback function.
 func LoginResponse(r *ghttp.Request, code int, token string, expire time.Time) {
 	r.Response.WriteJson(g.Map{
-		"code":   0,
+		"code":    0,
 		"message": "登录成功",
 		"data": g.Map{
-			"token": token,
-			"expire": expire.Format(time.RFC3339),
+			"token":    token,
+			"expire":   expire.Format(time.RFC3339),
 			"nickname": r.GetParam("nickname"),
 		},
 	})
@@ -96,11 +98,11 @@ func LoginResponse(r *ghttp.Request, code int, token string, expire time.Time) {
 // RefreshResponse is used to get a new token no matter current token is expired or not.
 func RefreshResponse(r *ghttp.Request, code int, token string, expire time.Time) {
 	r.Response.WriteJson(g.Map{
-		"code":   0,
+		"code":    0,
 		"message": "刷新token成功",
 		"data": g.Map{
-			"token": token,
-			"expire": expire.Format(time.RFC3339),
+			"token":    token,
+			"expire":   expire.Format(time.RFC3339),
 			"nickname": IdentityHandler(r),
 		},
 	})
@@ -115,16 +117,18 @@ func Authenticator(r *ghttp.Request) (interface{}, error) {
 	if e := gvalid.CheckMap(data, ValidationRules); e != nil {
 		return "", jwt.ErrFailedAuthentication
 	}
-	//从数据库读取用户数据并验证
+	// 从数据库读取用户数据并验证
 	user, err := dao.User.FindOne("passport=? and password=?", data["passport"], gsha1.Encrypt(data["password"]))
-	if err != nil {
+	if user == nil || err != nil {
 		return "", errors.New("用户名或密码错误")
 	}
-	if user == nil {
-		return "", errors.New("用户名或密码错误")
+	// 更新用户最后登录时间和IP
+	res, _ := dao.User.Data(g.Map{"last_login_time": gtime.Now(), "last_login_ip": utils.RemoteIp(r)}).Where("id", user.Id).Update()
+	if affected, errs := res.RowsAffected(); affected == 0 || errs != nil {
+		glog.Error("刷新用户最后登录状态失败")
 	}
-	r.SetParam("nickname",user.Nickname)
-	return g.Map {
+	r.SetParam("nickname", user.Nickname)
+	return g.Map{
 		"nickname": user.Nickname,
 		"id":       data["passport"],
 	}, nil
