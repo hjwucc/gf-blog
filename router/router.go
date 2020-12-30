@@ -13,7 +13,7 @@ func init() {
 	// 采用驼峰命名方式访问方法
 	s.SetNameToUriType(ghttp.URI_TYPE_CAMEL)
 
-	s.Group("/", func(group *ghttp.RouterGroup) {
+	s.Group("/go-gf-blog", func(group *ghttp.RouterGroup) {
 		group.ALL("/login",auth.GfJWTMiddleware.LoginHandler)
 		group.ALL("/article/get",api.Article.Get)
 		group.ALL("/article/conditionGetList",api.Article.ConditionGetList)
