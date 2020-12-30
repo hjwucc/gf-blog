@@ -75,3 +75,11 @@ func (a *apiUser) CheckNickName(r *ghttp.Request) {
 	response.JsonExit(r, 0, "ok", true)
 }
 
+// @summary 用户退出登录接口
+// @tags    用户服务
+// @produce json
+// @router  /user/logout [POST]
+func (a *apiUser) Logout(r *ghttp.Request) {
+	// todo 退出前操作
+	response.JsonExit(r, 0, "退出成功")
+}

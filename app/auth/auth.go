@@ -30,8 +30,8 @@ func init() {
 	authMiddleware, err := jwt.New(&jwt.GfJWTMiddleware{
 		Realm:           "test zone",
 		Key:             []byte("secret key"),
-		Timeout:         time.Minute * 30,
-		MaxRefresh:      time.Minute * 30,
+		Timeout:         time.Minute * 60,
+		MaxRefresh:      time.Minute * 60,
 		IdentityKey:     "id",
 		TokenLookup:     "header: Authorization, query: token, cookie: jwt",
 		TokenHeadName:   "Bearer",
@@ -69,14 +69,14 @@ func PayloadFunc(data interface{}) jwt.MapClaims {
 // IdentityHandler sets the identity for JWT.
 func IdentityHandler(r *ghttp.Request) interface{} {
 	claims := jwt.ExtractClaims(r)
-	return claims["nickname"]
+	return claims
 }
 
 // Unauthorized is used to define customized Unauthorized callback function.
 func Unauthorized(r *ghttp.Request, code int, message string) {
 	r.Response.WriteJson(g.Map{
-		"code": 0,
-		"msg":  message,
+		"code":    1,
+		"message": message,
 	})
 	r.ExitAll()
 }
@@ -90,6 +90,7 @@ func LoginResponse(r *ghttp.Request, code int, token string, expire time.Time) {
 			"token":    token,
 			"expire":   expire.Format(time.RFC3339),
 			"nickname": r.GetParam("nickname"),
+			"avatar":   r.GetParam("avatar"),
 		},
 	})
 	r.ExitAll()
@@ -103,7 +104,8 @@ func RefreshResponse(r *ghttp.Request, code int, token string, expire time.Time)
 		"data": g.Map{
 			"token":    token,
 			"expire":   expire.Format(time.RFC3339),
-			"nickname": IdentityHandler(r),
+			"nickname": IdentityHandler(r).(jwt.MapClaims)["nickname"],
+			"avatar":   IdentityHandler(r).(jwt.MapClaims)["avatar"],
 		},
 	})
 	r.ExitAll()
@@ -128,8 +130,10 @@ func Authenticator(r *ghttp.Request) (interface{}, error) {
 		glog.Error("刷新用户最后登录状态失败")
 	}
 	r.SetParam("nickname", user.Nickname)
+	r.SetParam("avatar", user.Avatar)
 	return g.Map{
 		"nickname": user.Nickname,
+		"avatar":   user.Avatar,
 		"id":       data["passport"],
 	}, nil
 }
