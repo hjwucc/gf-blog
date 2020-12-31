@@ -2,9 +2,10 @@ package service
 
 import (
 	"database/sql"
-	"github.com/gogf/gf/database/gdb"
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/os/gcache"
+	"github.com/gogf/gf/os/glog"
 	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/util/gconv"
 	"go-gf-blog/app/dao"
@@ -16,30 +17,51 @@ var Category = new(serviceCategory)
 type serviceCategory struct {
 }
 
-// 根据条件查询，若没有传参数则是查询所有分类
-func (a *serviceCategory) ConditionQueryList(req *model.ApiQueryCategoriesReq) (res gdb.Result, err error) {
-	model := g.DB().Table(dao.Categories.Table + " a")
-	if req.Id == 0 && req.Status == 0 {
-		res, err = model.FindAll()
-		if err != nil {
-			err = gerror.New("查询文章分类失败")
-			return
-		}
+// 初始化时查询分类列表并放入本地缓存
+func init() {
+	var categories []model.QueryCategoriesRes
+	err := g.DB().Table(dao.Categories.Table).Where("parent_id = 0").Where("status = 0").ScanList(&categories, "TopCategory")
+	err = g.DB().Table(dao.Categories.Table).Where("parent_id != 0").Where("status = 0").ScanList(&categories, "LowCategory", "TopCategory", "parent_id:Id")
+	if err != nil {
+		glog.Error("初始化分类列表失败")
 		return
 	}
-	if req.Status != 0 {
-		model = model.Where("status", req.Status)
-	}
-	if req.Id != 0 {
-		model = model.Where("id", req.Id)
-	}
+	// 不过期
+	gcache.Set("categoryList", categories, 0)
+}
 
-	res, err = model.All()
+// 根据条件查询，若没有传参数则是查询所有分类
+func (a *serviceCategory) ConditionQueryList(req *model.ApiQueryCategoriesReq) (categories []model.QueryCategoriesRes, err error) {
+	if req.Id == 0 {
+		// 由于查找所有分类比较耗时，所以放到本地缓存里
+		v, _ := gcache.Get("categoryList")
+		categories = v.([]model.QueryCategoriesRes)
+		return
+	}
+	err = g.DB().Table(dao.Categories.Table).Where("parent_id = 0").Where("status", req.Status).Where("id", req.Id).ScanList(&categories, "TopCategory")
+	err = g.DB().Table(dao.Categories.Table).Where("status", req.Status).Where("parent_id", req.Id).ScanList(&categories, "LowCategory", "TopCategory", "parent_id:Id")
 	if err != nil {
 		err = gerror.New("查询文章分类失败")
 		return
 	}
 	return
+}
+
+// 刷新分类列表
+func (a *serviceCategory) Fresh() error {
+	var categories []model.QueryCategoriesRes
+	err := g.DB().Table(dao.Categories.Table).Where("parent_id = 0").Where("status = 0").ScanList(&categories, "TopCategory")
+	err = g.DB().Table(dao.Categories.Table).Where("parent_id != 0").Where("status = 0").ScanList(&categories, "LowCategory", "TopCategory", "parent_id:Id")
+	if err != nil {
+		err = gerror.New("刷新分类列表失败")
+		return err
+	}
+	// 不过期
+	if b, _ := gcache.Contains("categoryList"); b {
+		gcache.Remove("categoryList")
+	}
+	gcache.Set("categoryList", categories, 0)
+	return nil
 }
 
 // 增加分类

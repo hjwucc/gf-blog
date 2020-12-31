@@ -9,8 +9,7 @@ import (
 
 // @title       go-gf-blog
 // @version     1.0
-// @description `GoFrame`基础开发框架搭建的博客
-// @schemes     http
+// @description `GoFrame`基础开发框架搭建的简易博客
 func main() {
 	g.Server().Run()
 }

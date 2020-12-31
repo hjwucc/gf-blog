@@ -16,7 +16,7 @@ type apiUser struct{}
 // @summary 用户注册接口
 // @tags    用户服务
 // @produce json
-// @param   entity  body model.ApiUserSignUpReq true "注册请求"
+// @param   entity body model.ApiUserSignUpReq true "注册请求"
 // @router  /user/signup [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiUser) SignUp(r *ghttp.Request) {
@@ -79,6 +79,7 @@ func (a *apiUser) CheckNickName(r *ghttp.Request) {
 // @tags    用户服务
 // @produce json
 // @router  /user/logout [POST]
+// @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiUser) Logout(r *ghttp.Request) {
 	// todo 退出前操作
 	response.JsonExit(r, 0, "退出成功")

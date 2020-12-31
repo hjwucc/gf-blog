@@ -24,3 +24,9 @@ type ApiAddCategoryReq struct {
 	Status    int    `p:"status" v:"required|in:0,1#请选择状态|状态必须在0和1之间"`
 	ParentId  int    `p:"parent_id"`
 }
+
+// 查询分类结果模型
+type QueryCategoriesRes struct {
+	TopCategory *Categories
+	LowCategory []*Categories
+}

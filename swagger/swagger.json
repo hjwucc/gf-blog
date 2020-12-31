@@ -1,10 +1,7 @@
 {
-    "schemes": [
-        "http"
-    ],
     "swagger": "2.0",
     "info": {
-        "description": "`GoFrame`基础开发框架搭建的博客",
+        "description": "`GoFrame`基础开发框架搭建的简易博客",
         "title": "go-gf-blog",
         "contact": {},
         "version": "1.0"
@@ -270,6 +267,25 @@
                 }
             }
         },
+        "/category/fresh": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "分类服务"
+                ],
+                "summary": "刷新分类接口",
+                "responses": {
+                    "200": {
+                        "description": "执行结果",
+                        "schema": {
+                            "$ref": "#/definitions/response.JsonResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/chat/index": {
             "get": {
                 "description": "聊天室首页，只显示模板内容。如果当前用户未登录，那么引导跳转到名称设置页面。",
@@ -317,6 +333,71 @@
                     "聊天室"
                 ],
                 "summary": "WebSocket接口"
+            }
+        },
+        "/file/delete": {
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文件服务"
+                ],
+                "summary": "删除单个文件",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "要删除的文件名",
+                        "name": "fileName",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "执行结果",
+                        "schema": {
+                            "$ref": "#/definitions/response.JsonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/put": {
+            "put": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文件服务"
+                ],
+                "summary": "上传单个文件",
+                "parameters": [
+                    {
+                        "description": "文件",
+                        "name": "upload-file",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "上传目标,如: upy/又拍云 qny/七牛云 aly/阿里云",
+                        "name": "target",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "执行结果",
+                        "schema": {
+                            "$ref": "#/definitions/response.JsonResponse"
+                        }
+                    }
+                }
             }
         },
         "/link/add": {
@@ -484,6 +565,25 @@
                 "responses": {
                     "200": {
                         "description": "执行结果:`true/false`",
+                        "schema": {
+                            "$ref": "#/definitions/response.JsonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/logout": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户服务"
+                ],
+                "summary": "用户退出登录接口",
+                "responses": {
+                    "200": {
+                        "description": "执行结果",
                         "schema": {
                             "$ref": "#/definitions/response.JsonResponse"
                         }

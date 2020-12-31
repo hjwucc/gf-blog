@@ -49,6 +49,18 @@ func (a *apiCategory) Add(r *ghttp.Request) {
 	response.JsonExit(r, 0, "文章分类保存成功", "success")
 }
 
+// @summary 刷新分类接口
+// @tags    分类服务
+// @produce json
+// @router  /category/fresh [POST]
+// @success 200 {object} response.JsonResponse "执行结果"
+func (a *apiCategory) Fresh(r *ghttp.Request) {
+	if err := service.Category.Fresh(); err != nil {
+		response.JsonExit(r, 1, err.Error())
+	}
+	response.JsonExit(r, 0, "分类列表刷新成功", "success")
+}
+
 // @summary 修改分类接口
 // @tags    分类服务
 // @produce json
@@ -64,7 +76,7 @@ func (a *apiCategory) Edit(r *ghttp.Request) {
 	if err := r.Parse(&data); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	if _,err := service.Category.Edit(id,data); err != nil {
+	if _, err := service.Category.Edit(id, data); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
 	response.JsonExit(r, 0, "文章分类修改成功", "success")

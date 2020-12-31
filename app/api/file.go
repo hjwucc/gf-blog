@@ -15,11 +15,11 @@ var File = new(apiFile)
 type apiFile struct {
 }
 
-// @summary 上传单个文件至又拍云
+// @summary 上传单个文件
 // @tags    文件服务
 // @produce json
-// @param   upload-file file true "文件"
-// @param   target path string true "上传目标"
+// @param   upload-file body string true "文件"
+// @param   target path string true "上传目标,如: upy/又拍云 qny/七牛云 aly/阿里云"
 // @router  /file/put [PUT]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiFile) Put(r *ghttp.Request) {
@@ -40,7 +40,7 @@ func (a *apiFile) Put(r *ghttp.Request) {
 	}
 }
 
-// @summary 删除又拍云的单个文件
+// @summary 删除单个文件
 // @tags    文件服务
 // @produce json
 // @param   fileName path string true "要删除的文件名"

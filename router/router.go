@@ -27,6 +27,7 @@ func init() {
 		group.ALL("/article/add",api.Article.Add)
 		group.ALL("/category/add",api.Category.Add)
 		group.ALL("/category/delete/{id}",api.Category.Delete)
+		group.ALL("/category/fresh/",api.Category.Fresh)
 		group.ALL("/category/edit/{id}",api.Category.Edit)
 		group.ALL("/link/add",api.Link.Add)
 		group.ALL("/link/edit/{id}",api.Link.Edit)
