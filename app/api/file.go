@@ -48,7 +48,7 @@ func (a *apiFile) Put(r *ghttp.Request) {
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiFile) Delete(r *ghttp.Request) {
 	// 要删除的文件存储在又拍云
-	if target := r.GetRouterString("fileName"); "upy" == target {
+	if target := r.GetRouterString("target"); "upy" == target {
 		if err := service.File.UpYunDelete("/go-gf-blog/"+r.GetRouterString("fileName"), true); err != nil {
 			response.JsonExit(r, 1, err.Error())
 		}

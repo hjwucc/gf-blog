@@ -347,6 +347,13 @@
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "要删除的文件所在目标,如: upy/又拍云 qny/七牛云 aly/阿里云",
+                        "name": "target",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "要删除的文件名",
                         "name": "fileName",
                         "in": "path",
