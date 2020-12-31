@@ -35,21 +35,24 @@ func (a *apiFile) Put(r *ghttp.Request) {
 			response.JsonExit(r, 1, err.Error())
 		}
 		response.JsonExit(r, 0, "上传文件到又拍云成功", g.Map{"fileUrl": url})
-	} else {
-		response.JsonExit(r, 1, "暂未配置除又拍云外的其他存储")
 	}
+	response.JsonExit(r, 1, "暂未配置除又拍云外的其他存储")
 }
 
 // @summary 删除单个文件
 // @tags    文件服务
 // @produce json
+// @param   target path string true "要删除的文件所在目标,如: upy/又拍云 qny/七牛云 aly/阿里云"
 // @param   fileName path string true "要删除的文件名"
 // @router  /file/delete [DELETE]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiFile) Delete(r *ghttp.Request) {
-	if err := service.File.UpYunDelete("/go-gf-blog/"+r.GetRouterString("fileName"), true); err != nil {
-		response.JsonExit(r, 1, err.Error())
-	}else {
+	// 要删除的文件存储在又拍云
+	if target := r.GetRouterString("fileName"); "upy" == target {
+		if err := service.File.UpYunDelete("/go-gf-blog/"+r.GetRouterString("fileName"), true); err != nil {
+			response.JsonExit(r, 1, err.Error())
+		}
 		response.JsonExit(r, 0, "删除又拍云文件成功")
 	}
+	response.JsonExit(r, 1, "删除的文件不在又拍云，但暂未配置其他存储")
 }
