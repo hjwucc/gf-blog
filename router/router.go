@@ -31,5 +31,7 @@ func init() {
 		group.ALL("/link/add",api.Link.Add)
 		group.ALL("/link/edit/{id}",api.Link.Edit)
 		group.ALL("/link/delete/{id}",api.Link.Delete)
+		group.ALL("/file/put/{target}",api.File.Put)
+		group.ALL("file/delete/{fileName}",api.File.Delete)
 	})
 }

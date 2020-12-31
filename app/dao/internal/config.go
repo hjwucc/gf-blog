@@ -25,11 +25,11 @@ type ConfigDao struct {
 
 // ConfigColumns defines and stores column names for table config.
 type configColumns struct {
-	Id           string //                              
-    YpuBucket    string // 又拍云存储服务名             
-    YpuOperator  string // 又拍云操作员                 
-    YpyPassword  string // 又拍云密码                   
-    YpyHosts     string // 又拍云自定义 Hosts 映射关系
+	Id           string //                   
+    YpuBucket    string // 又拍云存储服务名  
+    YpuOperator  string // 又拍云操作员      
+    YpyPassword  string // 又拍云密码        
+    YpuUrl       string // 又拍云存储域名
 }
 
 var (
@@ -42,7 +42,7 @@ var (
             YpuBucket:   "ypu_bucket",    
             YpuOperator: "ypu_operator",  
             YpyPassword: "ypy_password",  
-            YpyHosts:    "ypy_hosts",
+            YpuUrl:      "ypu_url",
 		},
 	}
 )
