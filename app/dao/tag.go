@@ -8,17 +8,17 @@ import (
 	"go-gf-blog/app/dao/internal"
 )
 
-// categoriesDao is the manager for logic model data accessing
+// tagDao is the manager for logic model data accessing
 // and custom defined data operations functions management. You can define
 // methods on it to extend its functionality as you wish.
-type categoriesDao struct {
-	*internal.CategoriesDao
+type tagDao struct {
+	*internal.TagDao
 }
 
 var (
-	// Categories is globally public accessible object for table categories operations.
-	Categories = &categoriesDao{
-		internal.Categories,
+	// Tag is globally public accessible object for table t_tag operations.
+	Tag = &tagDao{
+		internal.Tag,
 	}
 )
 

@@ -29,9 +29,9 @@ func init() {
 	}
 	// 初始化又拍云
 	up = upyun.NewUpYun(&upyun.UpYunConfig{
-		Bucket:   config.YpuBucket,
-		Operator: config.YpuOperator,
-		Password: utils.AesDecrypt(config.YpyPassword, g.Cfg().Get("file.ypu_key").(string)),
+		Bucket:   config.UpyBucket,
+		Operator: config.UpyOperator,
+		Password: utils.AesDecrypt(config.UpyPassword, g.Cfg().Get("file.upy_key").(string)),
 	})
 }
 
@@ -42,7 +42,7 @@ func (a *serviceFile) UpYunPut(path string, reader io.Reader, headers map[string
 		err = gerror.New("又拍云上传文件失败")
 		return err, ""
 	}
-	return nil, config.YpuUrl + path
+	return nil, config.UpyUrl + path
 }
 
 // 又拍云删除文件

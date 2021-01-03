@@ -20,8 +20,8 @@ type serviceCategory struct {
 // 初始化时查询分类列表并放入本地缓存
 func init() {
 	var categories []model.QueryCategoriesRes
-	err := g.DB().Table(dao.Categories.Table).Where("parent_id = 0").Where("status = 0").ScanList(&categories, "TopCategory")
-	err = g.DB().Table(dao.Categories.Table).Where("parent_id != 0").Where("status = 0").ScanList(&categories, "LowCategory", "TopCategory", "parent_id:Id")
+	err := g.DB().Table(dao.Category.Table).Where("parent_id = 0").Where("status = 0").ScanList(&categories, "TopCategory")
+	err = g.DB().Table(dao.Category.Table).Where("parent_id != 0").Where("status = 0").ScanList(&categories, "LowCategories", "TopCategory", "parent_id:Id")
 	if err != nil {
 		glog.Error("初始化分类列表失败")
 		return
@@ -38,8 +38,8 @@ func (a *serviceCategory) ConditionQueryList(req *model.ApiQueryCategoriesReq) (
 		categories = v.([]model.QueryCategoriesRes)
 		return
 	}
-	err = g.DB().Table(dao.Categories.Table).Where("parent_id = 0").Where("status", req.Status).Where("id", req.Id).ScanList(&categories, "TopCategory")
-	err = g.DB().Table(dao.Categories.Table).Where("status", req.Status).Where("parent_id", req.Id).ScanList(&categories, "LowCategory", "TopCategory", "parent_id:Id")
+	err = g.DB().Table(dao.Category.Table).Where("parent_id = 0").Where("status", req.Status).Where("id", req.Id).ScanList(&categories, "TopCategory")
+	err = g.DB().Table(dao.Category.Table).Where("status", req.Status).Where("parent_id", req.Id).ScanList(&categories, "LowCategories", "TopCategory", "parent_id:Id")
 	if err != nil {
 		err = gerror.New("查询文章分类失败")
 		return
@@ -50,15 +50,15 @@ func (a *serviceCategory) ConditionQueryList(req *model.ApiQueryCategoriesReq) (
 // 刷新分类列表
 func (a *serviceCategory) Fresh() error {
 	var categories []model.QueryCategoriesRes
-	err := g.DB().Table(dao.Categories.Table).Where("parent_id = 0").Where("status = 0").ScanList(&categories, "TopCategory")
-	err = g.DB().Table(dao.Categories.Table).Where("parent_id != 0").Where("status = 0").ScanList(&categories, "LowCategory", "TopCategory", "parent_id:Id")
+	err := g.DB().Table(dao.Category.Table).Where("parent_id = 0").Where("status = 0").ScanList(&categories, "TopCategory")
+	err = g.DB().Table(dao.Category.Table).Where("parent_id != 0").Where("status = 0").ScanList(&categories, "LowCategories", "TopCategory", "parent_id:Id")
 	if err != nil {
 		err = gerror.New("刷新分类列表失败")
 		return err
 	}
 	// 不过期
 	if b, _ := gcache.Contains("categoryList"); b {
-		gcache.Remove("categoryList")
+		_, _ = gcache.Remove("categoryList")
 	}
 	gcache.Set("categoryList", categories, 0)
 	return nil
@@ -66,14 +66,16 @@ func (a *serviceCategory) Fresh() error {
 
 // 增加分类
 func (a *serviceCategory) Add(req *model.ApiAddCategoryReq) (res sql.Result, err error) {
-	categoryEntity := &model.Categories{}
+	categoryEntity := &model.Category{}
 	categoryEntity.Status = req.Status
 	categoryEntity.UpdatedAt = gtime.Now()
 	categoryEntity.CreatedAt = gtime.Now()
 	categoryEntity.Name = req.Name
 	categoryEntity.Sort = req.Sort
 	categoryEntity.ParentId = req.ParentId
-	res, err = dao.Categories.Insert(categoryEntity)
+	categoryEntity.Cover = req.Cover
+	categoryEntity.Description = req.Description
+	res, err = dao.Category.Insert(categoryEntity)
 	if err != nil {
 		err = gerror.New("增加文章分类失败")
 		return
@@ -83,13 +85,13 @@ func (a *serviceCategory) Add(req *model.ApiAddCategoryReq) (res sql.Result, err
 
 // 编辑分类
 func (a *serviceCategory) Edit(id int, req *model.ApiAddCategoryReq) (res sql.Result, err error) {
-	entity := &model.Categories{}
+	entity := &model.Category{}
 	entity.Sort = req.Sort
 	entity.Name = req.Name
 	entity.UpdatedAt = gtime.Now()
 	entity.Status = req.Status
 	entity.ParentId = req.ParentId
-	res, err = dao.Categories.Update(gconv.Map(entity), "id", id)
+	res, err = dao.Category.Update(gconv.Map(entity), "id", id)
 	if res == nil || err != nil {
 		err = gerror.New("编辑分类失败")
 		return
@@ -104,7 +106,7 @@ func (a *serviceCategory) Edit(id int, req *model.ApiAddCategoryReq) (res sql.Re
 
 // 删除分类
 func (a *serviceCategory) Delete(id int) (res sql.Result, err error) {
-	res, err = dao.Categories.Delete("id", id)
+	res, err = dao.Category.Delete("id", id)
 	if err != nil {
 		err = gerror.New("删除分类失败")
 		return

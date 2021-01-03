@@ -1,7 +1,6 @@
 package api
 
 import (
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"go-gf-blog/app/model"
 	"go-gf-blog/app/service"
@@ -22,15 +21,16 @@ type apiArticle struct {
 // @router  /article/get [GET]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiArticle) Get(r *ghttp.Request) {
-	id := r.GetInt("id")
+	id, err := strconv.Atoi(r.GetRouterString("id"))
+	if err != nil {
+		response.JsonExit(r, 1, "文章id不正确")
+	}
 	entity, err := service.Article.Get(id)
 	if err != nil {
-		response.JsonExit(r, 1, "文章不存在,请联系管理员")
+		response.JsonExit(r, 1, err.Error())
 	}
-	data := g.Map{
-		"article": entity,
-	}
-	response.JsonExit(r, 0, "查询文章成功", data)
+
+	response.JsonExit(r, 0, "查询文章成功", entity)
 }
 
 // @summary 根据条件查找文章列表接口
@@ -44,15 +44,12 @@ func (a *apiArticle) ConditionGetList(r *ghttp.Request) {
 	if err := r.Parse(&data); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	total, pageList, err := service.Article.ConditionPageList(data)
+	pageList, err := service.Article.ConditionPageList(data)
 	if err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	res := g.Map{
-		"total":    total,
-		"pageList": pageList,
-	}
-	response.JsonExit(r, 0, "根据条件查询文章成功", res)
+
+	response.JsonExit(r, 0, "根据条件查询文章成功", pageList)
 }
 
 // @summary 新增文章接口
@@ -66,7 +63,7 @@ func (a *apiArticle) Add(r *ghttp.Request) {
 	if err := r.Parse(&data); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	if _, err := service.Article.Add(data); err != nil {
+	if _, err := service.Article.Add(data, r.GetParam("userId").(int)); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
 	response.JsonExit(r, 0, "文章保存成功", "success")

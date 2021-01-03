@@ -8,17 +8,17 @@ import (
 	"go-gf-blog/app/dao/internal"
 )
 
-// articlesDao is the manager for logic model data accessing
+// categoryDao is the manager for logic model data accessing
 // and custom defined data operations functions management. You can define
 // methods on it to extend its functionality as you wish.
-type articlesDao struct {
-	*internal.ArticlesDao
+type categoryDao struct {
+	*internal.CategoryDao
 }
 
 var (
-	// Articles is globally public accessible object for table articles operations.
-	Articles = &articlesDao{
-		internal.Articles,
+	// Category is globally public accessible object for table t_category operations.
+	Category = &categoryDao{
+		internal.Category,
 	}
 )
 

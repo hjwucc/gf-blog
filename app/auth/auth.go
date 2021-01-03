@@ -131,6 +131,7 @@ func Authenticator(r *ghttp.Request) (interface{}, error) {
 	}
 	r.SetParam("nickname", user.Nickname)
 	r.SetParam("avatar", user.Avatar)
+	r.SetParam("userId",user.Id)
 	return g.Map{
 		"nickname": user.Nickname,
 		"avatar":   user.Avatar,
