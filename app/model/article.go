@@ -48,8 +48,8 @@ type QueryArticle struct {
 	CategoryId   int         `orm:"category_id,unique" json:"category_id"   c:"category_id"`   // 文章栏目ID
 	CategoryName string      `orm:"category_name"      json:"category_name" c:"category_name"` // 文章栏目名称
 	Cover        string      `orm:"cover"              json:"cover"         c:"cover"`         // 文章封面
-	Content    string      `orm:"content"            json:"content"      c:"content"`          // 文章内容
-	MdContent  string      `orm:"md_content"         json:"md_content"   c:"md_content"`       // 文章markdown内容
+	Content      string      `orm:"content"            json:"content"       c:"content"`       // 文章内容
+	MdContent    string      `orm:"md_content"         json:"md_content"    c:"md_content"`    // 文章markdown内容
 	UserId       int         `orm:"user_id"            json:"user_id"       c:"user_id"`       // 用户ID
 	Author       string      `orm:"author"             json:"author"        c:"author"`        // 文章作者
 	ClickCount   int         `orm:"click_count"        json:"click_count"   c:"click_count"`   // 文章点击数
@@ -67,7 +67,7 @@ type QueryArticleTag struct {
 	TagName   string `orm:"tag_name"   json:"tag_name"   c:"tag_name"`   // 标签名称
 }
 
-// 查询文章列表市返回的实体组合
+// 查询文章列表时返回的实体组合
 type ArticleListRes struct {
 	Article *QueryArticleList
 	Tags    []*QueryArticleTag
