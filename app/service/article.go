@@ -29,7 +29,7 @@ func (a *serviceArticle) Get(id int) (article model.ArticleRes, err error) {
 	}
 
 	err = am.
-		Fields("DISTINCT a.id,a.title,a.summary,a.cover,a.author,a.click_count,a.is_top,a.created_at,a.updated_at,c.name category_name").
+		Fields("a.*,c.name category_name").
 		Scan(&article.Article)
 
 	err = g.DB().Table(dao.ArticleTag.Table+" aTag").
@@ -46,7 +46,7 @@ func (a *serviceArticle) Get(id int) (article model.ArticleRes, err error) {
 }
 
 // 根据条件分页查找
-func (a *serviceArticle) ConditionPageList(req *model.ApiArticlesListReq) (articles []model.ArticleRes, err error) {
+func (a *serviceArticle) ConditionPageList(req *model.ApiArticlesListReq) (articles []model.ArticleListRes, err error) {
 	am := g.DB().Table(dao.Article.Table+" a").
 		InnerJoin(dao.Category.Table+" c", "a.category_id = c.id").
 		Fields("DISTINCT a.id,a.title,a.summary,a.cover,a.author,a.click_count,a.is_top,a.created_at,a.updated_at,c.name category_name")

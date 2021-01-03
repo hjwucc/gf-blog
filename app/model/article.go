@@ -23,6 +23,24 @@ type ApiArticlesListReq struct {
 }
 
 // 用于查询文章列表时返回的文章实体
+type QueryArticleList struct {
+	Id           uint        `orm:"id,primary"         json:"id"            c:"-"`             // 文章ID
+	Title        string      `orm:"title"              json:"title"         c:"title"`         // 文章标题
+	Summary      string      `orm:"summary"            json:"summary"       c:"summary"`       // 文章简介
+	CategoryId   int         `orm:"category_id,unique" json:"category_id"   c:"category_id"`   // 文章栏目ID
+	CategoryName string      `orm:"category_name"      json:"category_name" c:"category_name"` // 文章栏目名称
+	Cover        string      `orm:"cover"              json:"cover"         c:"cover"`         // 文章封面
+	UserId       int         `orm:"user_id"            json:"user_id"       c:"user_id"`       // 用户ID
+	Author       string      `orm:"author"             json:"author"        c:"author"`        // 文章作者
+	ClickCount   int         `orm:"click_count"        json:"click_count"   c:"click_count"`   // 文章点击数
+	IsTop        int         `orm:"is_top"             json:"is_top"        c:"is_top"`        // 文章置顶:0-不置顶/1-置顶
+	From         int         `orm:"from"               json:"from"          c:"from"`          // 文章来源:0-原创/1-转载/2-其他
+	Status       int         `orm:"status"             json:"status"        c:"status"`        // 文章状态:1-发布/2-草稿/3-隐藏
+	CreatedAt    *gtime.Time `orm:"created_at"         json:"created_at"    c:"created_at"`    // 创建时间
+	UpdatedAt    *gtime.Time `orm:"updated_at"         json:"updated_at"    c:"updated_at"`    // 更新时间
+}
+
+// 用于查询文章详情时返回的文章实体
 type QueryArticle struct {
 	Id           uint        `orm:"id,primary"         json:"id"            c:"-"`             // 文章ID
 	Title        string      `orm:"title"              json:"title"         c:"title"`         // 文章标题
@@ -30,6 +48,8 @@ type QueryArticle struct {
 	CategoryId   int         `orm:"category_id,unique" json:"category_id"   c:"category_id"`   // 文章栏目ID
 	CategoryName string      `orm:"category_name"      json:"category_name" c:"category_name"` // 文章栏目名称
 	Cover        string      `orm:"cover"              json:"cover"         c:"cover"`         // 文章封面
+	Content    string      `orm:"content"            json:"content"      c:"content"`          // 文章内容
+	MdContent  string      `orm:"md_content"         json:"md_content"   c:"md_content"`       // 文章markdown内容
 	UserId       int         `orm:"user_id"            json:"user_id"       c:"user_id"`       // 用户ID
 	Author       string      `orm:"author"             json:"author"        c:"author"`        // 文章作者
 	ClickCount   int         `orm:"click_count"        json:"click_count"   c:"click_count"`   // 文章点击数
@@ -47,6 +67,13 @@ type QueryArticleTag struct {
 	TagName   string `orm:"tag_name"   json:"tag_name"   c:"tag_name"`   // 标签名称
 }
 
+// 查询文章列表市返回的实体组合
+type ArticleListRes struct {
+	Article *QueryArticleList
+	Tags    []*QueryArticleTag
+}
+
+// 查询文章详情时返回的实体组合
 type ArticleRes struct {
 	Article *QueryArticle
 	Tags    []*QueryArticleTag
