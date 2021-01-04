@@ -9,7 +9,6 @@ import (
 	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/text/gstr"
 	"github.com/gogf/gf/util/gconv"
-	"github.com/gogf/gf/util/gutil"
 	"go-gf-blog/app/dao"
 	"go-gf-blog/app/model"
 )
@@ -196,13 +195,12 @@ func (a *serviceArticle) Delete(id int) error {
 			return gerror.New("删除文章失败，请联系管理员")
 		}
 
-		var queryArticleTags model.QueryArticleTags
-		err = dao.ArticleTag.Where("article_id", id).Scan(&queryArticleTags.ArticleTag, "article_id", id)
-		ids := gdb.ListItemValues(queryArticleTags, "ArticleTag", "TagId")
-		fmt.Println(ids)
-		_, err = tx.Update(dao.Tag.Table, g.Map{"article_count": gdb.Raw("article_count-1")}, "id", gutil.ListItemValues(queryArticleTags,"ArticleTag","TagId"))
+		tagIds, err := dao.ArticleTag.Array("tag_id", "article_id", id)
+
+		_, err = tx.Update(dao.Tag.Table, g.Map{"article_count": gdb.Raw("article_count-1")}, "id", tagIds)
+
 		if err != nil {
-			return gerror.New("删除失败，因为文章对应的标签下文章数量更新失败")
+			return gerror.New("删除失败，因为文章对应的标签文章数量更新失败")
 		}
 
 		_, err = tx.Delete(dao.ArticleTag.Table, "article_id", id)
