@@ -48,7 +48,7 @@ func (a *apiLink) Add(r *ghttp.Request) {
 	if err := r.Parse(&data); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	if _, err := service.Link.Add(data); err != nil {
+	if err := service.Link.Add(data); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
 	response.JsonExit(r, 0, "链接添加成功", "success")
@@ -69,7 +69,7 @@ func (a *apiLink) Edit(r *ghttp.Request) {
 	if err := r.Parse(&data); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	if _, err := service.Link.Edit(id, data); err != nil {
+	if err := service.Link.Edit(id, data); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
 	response.JsonExit(r, 0, "链接修改成功", "success")
@@ -86,7 +86,7 @@ func (a *apiLink) Delete(r *ghttp.Request) {
 	if err != nil {
 		response.JsonExit(r, 1, "链接id不正确")
 	}
-	if _, err := service.Link.Delete(id); err != nil {
+	if err := service.Link.Delete(id); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
 	response.JsonExit(r, 0, "链接删除成功", "success")

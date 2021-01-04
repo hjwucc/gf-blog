@@ -1,13 +1,15 @@
 package service
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/gogf/gf/database/gdb"
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/os/glog"
 	"github.com/gogf/gf/os/gtime"
+	"github.com/gogf/gf/text/gstr"
 	"github.com/gogf/gf/util/gconv"
+	"github.com/gogf/gf/util/gutil"
 	"go-gf-blog/app/dao"
 	"go-gf-blog/app/model"
 )
@@ -19,9 +21,9 @@ type serviceArticle struct {
 
 // 根据文章ID查找
 func (a *serviceArticle) Get(id int) (article model.ArticleRes, err error) {
-	am := g.DB().Table(dao.Article.Table + " a").
+	am := g.DB().Table(dao.Article.Table+" a").
 		InnerJoin(dao.Category.Table+" c", "a.category_id = c.id").
-		Where("a.id",id)
+		Where("a.id", id)
 
 	if count, _ := am.Count(); count == 0 {
 		err = gerror.New("查询的文章不存在，请联系管理员")
@@ -94,63 +96,121 @@ func (a *serviceArticle) ConditionPageList(req *model.ApiArticlesListReq) (artic
 	return
 }
 
-// 添加文章
-func (a *serviceArticle) Add(req *model.ApiAddArticleReq, userId int) (res sql.Result, err error) {
-	articleEntity := &model.Article{}
-	articleEntity.Status = req.Status
-	articleEntity.CategoryId = req.CategoryId
-	articleEntity.Content = req.Content
-	articleEntity.CreatedAt = gtime.Now()
-	articleEntity.UpdatedAt = gtime.Now()
-	articleEntity.From = req.From
-	articleEntity.Title = req.Title
-	articleEntity.MdContent = req.MdContent
-	articleEntity.Summary = req.Summary
-	articleEntity.Cover = req.Cover
-	articleEntity.Author = req.Author
-	articleEntity.UserId = userId
-	articleEntity.IsTop = req.IsTop
-	res, err = dao.Article.Insert(articleEntity)
-	if err != nil {
-		err = gerror.New("添加文章失败")
-		return
-	}
+// 发布（新增或修改）文章
+func (a *serviceArticle) Publish(req *model.ApiPublishArticleReq, userId int) error {
+	err := g.DB().Transaction(func(tx *gdb.TX) error {
+		var articleId int
+		var err error
+		if req.Id != 0 {
+			articleId = req.Id
+			err = Article.Edit(articleId, req)
+		} else {
+			articleId, err = Article.Add(req, userId)
+		}
+
+		if err != nil {
+			return gerror.New("发布文章失败")
+		}
+
+		// 设置文章标签
+		tags := gstr.Split(req.Tags, ",")
+		if tagsLen := len(tags); tagsLen > 0 {
+			for _, v := range tags {
+				tagId, articleCount, err := Tag.Add(v)
+				if err != nil {
+					glog.Error(err.Error())
+				} else {
+					err = ArticleTag.Add(tagId, articleId, articleCount)
+					if err != nil {
+						glog.Error(err.Error())
+					}
+				}
+			}
+		}
+		return nil
+	})
+	return err
+}
+
+// 新增文章
+func (a *serviceArticle) Add(req *model.ApiPublishArticleReq, userId int) (articleId int, err error) {
+	err = g.DB().Transaction(func(tx *gdb.TX) error {
+		articleEntity := &model.Article{}
+		articleEntity.Status = req.Status
+		articleEntity.CategoryId = req.CategoryId
+		articleEntity.Content = req.Content
+		articleEntity.CreatedAt = gtime.Now()
+		articleEntity.UpdatedAt = gtime.Now()
+		articleEntity.From = req.From
+		articleEntity.Title = req.Title
+		articleEntity.MdContent = req.MdContent
+		articleEntity.Summary = req.Summary
+		articleEntity.Cover = req.Cover
+		articleEntity.Author = req.Author
+		articleEntity.UserId = userId
+		articleEntity.IsTop = req.IsTop
+		res, err := tx.Insert(dao.Article.Table, articleEntity)
+		if err != nil {
+			return gerror.New("添加文章失败")
+		}
+		id, err := res.LastInsertId()
+		articleId = int(id)
+		return err
+	})
 	return
 }
 
 // 修改文章
-func (a *serviceArticle) Edit(id int, req *model.ApiAddArticleReq) (result sql.Result, err error) {
-	articleEntity := &model.Article{}
-	articleEntity.Status = req.Status
-	articleEntity.CategoryId = req.CategoryId
-	articleEntity.Content = req.Content
-	articleEntity.UpdatedAt = gtime.Now()
-	articleEntity.From = req.From
-	articleEntity.Title = req.Title
-	articleEntity.MdContent = req.MdContent
-	articleEntity.Summary = req.Summary
-	articleEntity.Cover = req.Cover
-	articleEntity.Author = req.Author
-	articleEntity.IsTop = req.IsTop
-	result, err = dao.Article.Update(gconv.Map(articleEntity), "id", id)
-	if result == nil || err != nil {
-		err = gerror.New("修改文章失败")
-		return
-	}
-
-	if affected, _ := result.RowsAffected(); affected == 0 {
-		err = gerror.New("文章ID不存在")
-		return
-	}
-	return
+func (a *serviceArticle) Edit(id int, req *model.ApiPublishArticleReq) error {
+	err := g.DB().Transaction(func(tx *gdb.TX) error {
+		articleEntity := &model.Article{}
+		articleEntity.Status = req.Status
+		articleEntity.CategoryId = req.CategoryId
+		articleEntity.Content = req.Content
+		articleEntity.UpdatedAt = gtime.Now()
+		articleEntity.From = req.From
+		articleEntity.Title = req.Title
+		articleEntity.MdContent = req.MdContent
+		articleEntity.Summary = req.Summary
+		articleEntity.Cover = req.Cover
+		articleEntity.Author = req.Author
+		articleEntity.IsTop = req.IsTop
+		result, err := tx.Update(dao.Article.Table, gconv.Map(articleEntity), "id", id)
+		if result == nil || err != nil {
+			return gerror.New("修改文章失败")
+		}
+		if affected, _ := result.RowsAffected(); affected == 0 {
+			return gerror.New("文章ID不存在")
+		}
+		return nil
+	})
+	return err
 }
 
 // 删除文章
-func (a *serviceArticle) Delete(id int) (result sql.Result, err error) {
-	result, err = dao.Article.Delete("id", id)
-	if err != nil {
-		err = gerror.New("删除文章失败，请联系管理员")
-		return
-	}
-	return
+func (a *serviceArticle) Delete(id int) error {
+	err := g.DB().Transaction(func(tx *gdb.TX) error {
+		_, err := tx.Delete(dao.Article.Table, "id", id)
+
+		if err != nil {
+			return gerror.New("删除文章失败，请联系管理员")
+		}
+
+		var queryArticleTags model.QueryArticleTags
+		err = dao.ArticleTag.Where("article_id", id).Scan(&queryArticleTags.ArticleTag, "article_id", id)
+		ids := gdb.ListItemValues(queryArticleTags, "ArticleTag", "TagId")
+		fmt.Println(ids)
+		_, err = tx.Update(dao.Tag.Table, g.Map{"article_count": gdb.Raw("article_count-1")}, "id", gutil.ListItemValues(queryArticleTags,"ArticleTag","TagId"))
+		if err != nil {
+			return gerror.New("删除失败，因为文章对应的标签下文章数量更新失败")
+		}
+
+		_, err = tx.Delete(dao.ArticleTag.Table, "article_id", id)
+
+		if err != nil {
+			return gerror.New("删除失败，因为删除文章标签关联表失败")
+		}
+		return nil
+	})
+	return err
 }

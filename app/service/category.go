@@ -1,7 +1,7 @@
 package service
 
 import (
-	"database/sql"
+	"github.com/gogf/gf/database/gdb"
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/os/gcache"
@@ -65,51 +65,56 @@ func (a *serviceCategory) Fresh() error {
 }
 
 // 增加分类
-func (a *serviceCategory) Add(req *model.ApiAddCategoryReq) (res sql.Result, err error) {
-	categoryEntity := &model.Category{}
-	categoryEntity.Status = req.Status
-	categoryEntity.UpdatedAt = gtime.Now()
-	categoryEntity.CreatedAt = gtime.Now()
-	categoryEntity.Name = req.Name
-	categoryEntity.Sort = req.Sort
-	categoryEntity.ParentId = req.ParentId
-	categoryEntity.Cover = req.Cover
-	categoryEntity.Description = req.Description
-	res, err = dao.Category.Insert(categoryEntity)
-	if err != nil {
-		err = gerror.New("增加文章分类失败")
-		return
-	}
-	return
+func (a *serviceCategory) Add(req *model.ApiAddCategoryReq) error {
+	err := g.DB().Transaction(func(tx *gdb.TX) error {
+		categoryEntity := &model.Category{}
+		categoryEntity.Status = req.Status
+		categoryEntity.UpdatedAt = gtime.Now()
+		categoryEntity.CreatedAt = gtime.Now()
+		categoryEntity.Name = req.Name
+		categoryEntity.Sort = req.Sort
+		categoryEntity.ParentId = req.ParentId
+		categoryEntity.Cover = req.Cover
+		categoryEntity.Description = req.Description
+		_, err := tx.Insert(dao.Category.Table, categoryEntity)
+		if err != nil {
+			return gerror.New("增加文章分类失败")
+		}
+		return nil
+	})
+	return err
 }
 
 // 编辑分类
-func (a *serviceCategory) Edit(id int, req *model.ApiAddCategoryReq) (res sql.Result, err error) {
-	entity := &model.Category{}
-	entity.Sort = req.Sort
-	entity.Name = req.Name
-	entity.UpdatedAt = gtime.Now()
-	entity.Status = req.Status
-	entity.ParentId = req.ParentId
-	res, err = dao.Category.Update(gconv.Map(entity), "id", id)
-	if res == nil || err != nil {
-		err = gerror.New("编辑分类失败")
-		return
-	}
+func (a *serviceCategory) Edit(id int, req *model.ApiAddCategoryReq) error {
+	err := g.DB().Transaction(func(tx *gdb.TX) error {
+		entity := &model.Category{}
+		entity.Sort = req.Sort
+		entity.Name = req.Name
+		entity.UpdatedAt = gtime.Now()
+		entity.Status = req.Status
+		entity.ParentId = req.ParentId
+		res, err := tx.Update(dao.Category.Table, gconv.Map(entity), "id", id)
+		if res == nil || err != nil {
+			return gerror.New("编辑分类失败")
+		}
 
-	if affected, _ := res.RowsAffected(); affected == 0 {
-		err = gerror.New("分类ID不存在")
-		return
-	}
-	return
+		if affected, _ := res.RowsAffected(); affected == 0 {
+			return gerror.New("分类ID不存在")
+		}
+		return nil
+	})
+	return err
 }
 
 // 删除分类
-func (a *serviceCategory) Delete(id int) (res sql.Result, err error) {
-	res, err = dao.Category.Delete("id", id)
-	if err != nil {
-		err = gerror.New("删除分类失败")
-		return
-	}
-	return
+func (a *serviceCategory) Delete(id int) error {
+	err := g.DB().Transaction(func(tx *gdb.TX) error {
+		_, err := tx.Delete(dao.Category.Table, "id", id)
+		if err != nil {
+			return gerror.New("删除分类失败")
+		}
+		return nil
+	})
+	return err
 }

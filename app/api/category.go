@@ -43,7 +43,7 @@ func (a *apiCategory) Add(r *ghttp.Request) {
 	if err := r.Parse(&data); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	if _, err := service.Category.Add(data); err != nil {
+	if err := service.Category.Add(data); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
 	response.JsonExit(r, 0, "文章分类保存成功", "success")
@@ -76,7 +76,7 @@ func (a *apiCategory) Edit(r *ghttp.Request) {
 	if err := r.Parse(&data); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	if _, err := service.Category.Edit(id, data); err != nil {
+	if err := service.Category.Edit(id, data); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
 	response.JsonExit(r, 0, "文章分类修改成功", "success")
@@ -93,7 +93,7 @@ func (a *apiCategory) Delete(r *ghttp.Request) {
 	if err != nil {
 		response.JsonExit(r, 1, "文章分类id不正确")
 	}
-	if _, err := service.Category.Delete(id); err != nil {
+	if err := service.Category.Delete(id); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
 	response.JsonExit(r, 0, "文章分类删除成功")

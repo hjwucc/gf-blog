@@ -1,7 +1,6 @@
 package service
 
 import (
-	"database/sql"
 	"github.com/gogf/gf/database/gdb"
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/frame/g"
@@ -48,50 +47,57 @@ func (a *serviceLink) ConditionPageList(req *model.ApiLinkListReq) (totalCount i
 }
 
 // 添加链接
-func (a *serviceLink) Add(req *model.ApiAddLinkReq) (res sql.Result, err error) {
-	linkEntity := &model.Link{}
-	linkEntity.Sort = req.Sort
-	linkEntity.UpdatedAt = gtime.Now()
-	linkEntity.CreatedAt = gtime.Now()
-	linkEntity.IconUrl = req.IconUrl
-	linkEntity.LinkName = req.LinkName
-	linkEntity.LinkUrl = req.LinkUrl
-	res, err = dao.Link.Insert(linkEntity)
-	if err != nil {
-		err = gerror.New("添加链接失败")
-		return
-	}
+func (a *serviceLink) Add(req *model.ApiAddLinkReq) error {
+	err := g.DB().Transaction(func(tx *gdb.TX) error {
+		linkEntity := &model.Link{}
+		linkEntity.Sort = req.Sort
+		linkEntity.UpdatedAt = gtime.Now()
+		linkEntity.CreatedAt = gtime.Now()
+		linkEntity.IconUrl = req.IconUrl
+		linkEntity.LinkName = req.LinkName
+		linkEntity.LinkUrl = req.LinkUrl
+		_, err := tx.Insert(dao.Link.Table, linkEntity)
+		if err != nil {
+			return gerror.New("添加链接失败")
+		}
+		return nil
+	})
 
-	return
+	return err
 }
 
 // 修改链接
-func (a *serviceLink) Edit(id int, req *model.ApiAddLinkReq) (result sql.Result, err error) {
-	linkEntity := &model.Link{}
-	linkEntity.LinkUrl = req.LinkUrl
-	linkEntity.LinkName = req.LinkName
-	linkEntity.IconUrl = req.IconUrl
-	linkEntity.Sort = req.Sort
-	linkEntity.UpdatedAt = gtime.Now()
-	result, err = dao.Link.Update(gconv.Map(linkEntity), "id", id)
-	if result == nil || err != nil {
-		err = gerror.New("修改链接失败")
-		return
-	}
+func (a *serviceLink) Edit(id int, req *model.ApiAddLinkReq) error {
+	err := g.DB().Transaction(func(tx *gdb.TX) error {
+		linkEntity := &model.Link{}
+		linkEntity.LinkUrl = req.LinkUrl
+		linkEntity.LinkName = req.LinkName
+		linkEntity.IconUrl = req.IconUrl
+		linkEntity.Sort = req.Sort
+		linkEntity.UpdatedAt = gtime.Now()
+		result, err := tx.Update(dao.Link.Table, gconv.Map(linkEntity), "id", id)
+		if result == nil || err != nil {
+			return gerror.New("修改链接失败")
+		}
 
-	if affected, _ := result.RowsAffected(); affected == 0 {
-		err = gerror.New("链接ID不存在")
-	}
+		if affected, _ := result.RowsAffected(); affected == 0 {
+			return gerror.New("链接ID不存在")
+		}
 
-	return
+		return nil
+	})
+
+	return err
 }
 
 // 删除链接
-func (a *serviceLink) Delete(id int) (result sql.Result, err error) {
-	result, err = dao.Link.Delete("id", id)
-	if err != nil {
-		err = gerror.New("删除链接失败，请联系管理员")
-		return
-	}
-	return
+func (a *serviceLink) Delete(id int) error {
+	err := g.DB().Transaction(func(tx *gdb.TX) error {
+		_, err := tx.Delete("id", id)
+		if err != nil {
+			return gerror.New("删除链接失败，请联系管理员")
+		}
+		return nil
+	})
+	return err
 }

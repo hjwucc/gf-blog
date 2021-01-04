@@ -11,4 +11,6 @@ import (
 // ArticleTag is the golang structure for table t_article_tag.
 type ArticleTag internal.ArticleTag
 
-// Fill with you ideas below.
+type QueryArticleTags struct {
+	ArticleTag []*ArticleTag
+}

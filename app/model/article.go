@@ -79,13 +79,14 @@ type ArticleRes struct {
 	Tags    []*QueryArticleTag
 }
 
-// 添加文章请求实体
-type ApiAddArticleReq struct {
+// 发布文章请求实体
+type ApiPublishArticleReq struct {
+	Id         int    `p:"id"`
 	Title      string `p:"title"       v:"required#请填写文章标题"`
 	Summary    string `p:"summary"`
-	Cover      string `p:"cover"       v:"required#请上传文章封面"`
+	Cover      string `p:"cover"`
 	CategoryId int    `p:"category_id" v:"required|min:1#请选择栏目|请选择栏目"`
-	Tags       string `p:"tags"        v:"required#请选择标签"`
+	Tags       string `p:"tags"`
 	From       int    `p:"from"        v:"required#请选择文章来源"`
 	Status     int    `p:"status"      v:"required#请设置文章状态"`
 	Content    string `p:"content"     v:"required#请填写文章内容"`

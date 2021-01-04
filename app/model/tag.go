@@ -11,4 +11,12 @@ import (
 // Tag is the golang structure for table t_tag.
 type Tag internal.Tag
 
-// Fill with you ideas below.
+// 新增标签请求实体
+type ApiAddTagReq struct {
+	Name string `p:"name" v:"required#请填写标签名称"`
+}
+
+// 删除标签请求实体
+type ApiDeleteTagsReq struct {
+	Ids interface{} `p:"ids" v:"required#请至少选择一个标签"`
+}
