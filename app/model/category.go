@@ -11,8 +11,14 @@ import (
 // Category is the golang structure for table t_category.
 type Category internal.Category
 
-// 列表查询请求实体
+// 分类列表查询请求实体
 type ApiQueryCategoriesReq struct {
+	Id int `p:"id"`
+	Status int `p:"status"`
+}
+
+// 分类列表查询输入实体
+type ServiceQueryCategoriesReq struct {
 	Id int `p:"id"`
 	Status int `p:"status"`
 }
@@ -22,6 +28,16 @@ type ApiAddCategoryReq struct {
 	Name   	  string   `p:"name" v:"required#请输入正确的分类名称"`
 	Sort      int      `p:"sort" v:"required|integer#请填写设置排序|排序必须是整数"`
 	Status    int      `p:"status" v:"required|in:0,1#请选择状态|状态必须在0和1之间"`
+	ParentId  int      `p:"parent_id"`
+	Cover     string   `p:"cover"`
+	Description string `p:"description"`
+}
+
+// 增加分类输入实体
+type ServiceAddCategoryReq struct {
+	Name   	  string   `p:"name"`
+	Sort      int      `p:"sort"`
+	Status    int      `p:"status"`
 	ParentId  int      `p:"parent_id"`
 	Cover     string   `p:"cover"`
 	Description string `p:"description"`

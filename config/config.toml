@@ -33,7 +33,7 @@ Stdout = true
 # 自定义DAO生成配置(默认是读取database配置)
 [[gfcli.gen.dao]]
 link   = "mysql:root:@wm1231008327x@tcp(47.103.147.177:3306)/go_gf_blog"
-tables = "t_tag"
+tables = "t_user"
 remove-prefix = "t_"
 
 # HTTP basic authentication passport/password for swagger api page.

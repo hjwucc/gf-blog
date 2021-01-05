@@ -4,9 +4,8 @@
 
 package dao
 
-import (
-	"go-gf-blog/app/dao/internal"
-)
+import "go-gf-blog/app/dao/internal"
+
 
 // userDao is the manager for logic model data accessing
 // and custom defined data operations functions management. You can define
@@ -16,7 +15,7 @@ type userDao struct {
 }
 
 var (
-	// User is globally public accessible object for table user operations.
+	// User is globally public accessible object for table t_user operations.
 	User = &userDao{
 		internal.User,
 	}

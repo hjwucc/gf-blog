@@ -11,6 +11,7 @@ import (
 	"github.com/gogf/gf/util/gconv"
 	"go-gf-blog/app/dao"
 	"go-gf-blog/app/model"
+	"go-gf-blog/library/constants"
 )
 
 var Article = new(serviceArticle)
@@ -47,7 +48,7 @@ func (a *serviceArticle) Get(id int) (article model.ArticleRes, err error) {
 }
 
 // 根据条件分页查找
-func (a *serviceArticle) ConditionPageList(req *model.ApiArticlesListReq) (articles []model.ArticleListRes, err error) {
+func (a *serviceArticle) ConditionPageList(req *model.ServiceArticlesListReq) (articles []model.ArticleListRes, err error) {
 	am := g.DB().Table(dao.Article.Table+" a").
 		InnerJoin(dao.Category.Table+" c", "a.category_id = c.id").
 		Fields("DISTINCT a.id,a.title,a.summary,a.cover,a.author,a.click_count,a.is_top,a.created_at,a.updated_at,c.name category_name")
@@ -96,7 +97,7 @@ func (a *serviceArticle) ConditionPageList(req *model.ApiArticlesListReq) (artic
 }
 
 // 发布（新增或修改）文章
-func (a *serviceArticle) Publish(req *model.ApiPublishArticleReq, userId int) error {
+func (a *serviceArticle) Publish(req *model.ServicePublishArticleReq, userId int) error {
 	err := g.DB().Transaction(func(tx *gdb.TX) error {
 		var articleId int
 		var err error
@@ -132,7 +133,7 @@ func (a *serviceArticle) Publish(req *model.ApiPublishArticleReq, userId int) er
 }
 
 // 新增文章
-func (a *serviceArticle) Add(req *model.ApiPublishArticleReq, userId int) (articleId int, err error) {
+func (a *serviceArticle) Add(req *model.ServicePublishArticleReq, userId int) (articleId int, err error) {
 	err = g.DB().Transaction(func(tx *gdb.TX) error {
 		articleEntity := &model.Article{}
 		articleEntity.Status = req.Status
@@ -160,7 +161,7 @@ func (a *serviceArticle) Add(req *model.ApiPublishArticleReq, userId int) (artic
 }
 
 // 修改文章
-func (a *serviceArticle) Edit(id int, req *model.ApiPublishArticleReq) error {
+func (a *serviceArticle) Edit(id int, req *model.ServicePublishArticleReq) error {
 	err := g.DB().Transaction(func(tx *gdb.TX) error {
 		articleEntity := &model.Article{}
 		articleEntity.Status = req.Status
@@ -210,5 +211,42 @@ func (a *serviceArticle) Delete(id int) error {
 		}
 		return nil
 	})
+	return err
+}
+
+// 修改文章属性（置顶/发布状态）
+func (a *serviceArticle) UpdateAttributeById(serviceReq *model.ServiceUpdateArticleAttributeReq) error {
+	one, _ := dao.Article.FindOne("id", serviceReq.ArticleId)
+	if one == nil {
+		return gerror.New("要修改属性的文章不存在")
+	}
+	err := g.DB().Transaction(func(tx *gdb.TX) error {
+		if constants.Top == serviceReq.Type {
+			if one.IsTop == 0 {
+				one.IsTop = 1
+			} else {
+				one.IsTop = 0
+			}
+			_, err := tx.Update(dao.Article.Table, g.Map{"is_top": one.IsTop}, "id", serviceReq.ArticleId)
+			if err != nil {
+				return gerror.New("修改文章置顶失败")
+			}
+			return nil
+		}
+		if constants.Status == serviceReq.Type {
+			if one.Status == 0 {
+				one.Status = 1
+			} else {
+				one.Status = 0
+			}
+			_, err := tx.Update(dao.Article.Table, g.Map{"status": one.Status}, "id", serviceReq.ArticleId)
+			if err != nil {
+				return gerror.New("修改文章发布状态失败")
+			}
+			return nil
+		}
+		return gerror.New("没有匹配要修改的文章属性")
+	})
+
 	return err
 }

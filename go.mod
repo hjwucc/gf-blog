@@ -3,8 +3,7 @@ module go-gf-blog
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/go-openapi/spec v0.20.0 // indirect
-	github.com/gogf/gf v1.14.6-0.20201214132204-c685876e6f67
-	github.com/gogf/gf-demos v0.0.0-20201214132547-168e049e5852
+	github.com/gogf/gf v1.15.0
 	github.com/gogf/gf-jwt v1.1.0
 	github.com/gogf/swagger v1.2.0
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect

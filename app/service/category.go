@@ -31,7 +31,7 @@ func init() {
 }
 
 // 根据条件查询，若没有传参数则是查询所有分类
-func (a *serviceCategory) ConditionQueryList(req *model.ApiQueryCategoriesReq) (categories []model.QueryCategoriesRes, err error) {
+func (a *serviceCategory) ConditionQueryList(req *model.ServiceQueryCategoriesReq) (categories []model.QueryCategoriesRes, err error) {
 	if req.Id == 0 {
 		// 由于查找所有分类比较耗时，所以放到本地缓存里
 		v, _ := gcache.Get("categoryList")
@@ -65,7 +65,7 @@ func (a *serviceCategory) Fresh() error {
 }
 
 // 增加分类
-func (a *serviceCategory) Add(req *model.ApiAddCategoryReq) error {
+func (a *serviceCategory) Add(req *model.ServiceAddCategoryReq) error {
 	err := g.DB().Transaction(func(tx *gdb.TX) error {
 		categoryEntity := &model.Category{}
 		categoryEntity.Status = req.Status
@@ -86,7 +86,7 @@ func (a *serviceCategory) Add(req *model.ApiAddCategoryReq) error {
 }
 
 // 编辑分类
-func (a *serviceCategory) Edit(id int, req *model.ApiAddCategoryReq) error {
+func (a *serviceCategory) Edit(id int, req *model.ServiceAddCategoryReq) error {
 	err := g.DB().Transaction(func(tx *gdb.TX) error {
 		entity := &model.Category{}
 		entity.Sort = req.Sort

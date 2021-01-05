@@ -22,7 +22,7 @@ type Article struct {
     ClickCount int         `orm:"click_count"        json:"click_count"  c:"click_count"` // 文章点击数
     IsTop      int         `orm:"is_top"             json:"is_top"       c:"is_top"`      // 文章置顶:0-不置顶/1-置顶
     From       int         `orm:"from"               json:"from"         c:"from"`        // 文章来源:0-原创/1-转载/2-其他
-    Status     int         `orm:"status"             json:"status"       c:"status"`      // 文章状态:1-发布/2-草稿/3-隐藏
+    Status     int         `orm:"status"             json:"status"       c:"status"`      // 文章状态:0-发布/1-草稿
     CreatedAt  *gtime.Time `orm:"created_at"         json:"created_at"   c:"created_at"`  // 创建时间
     UpdatedAt  *gtime.Time `orm:"updated_at"         json:"updated_at"   c:"updated_at"`  // 更新时间
 }

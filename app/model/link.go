@@ -11,8 +11,15 @@ import (
 // Link is the golang structure for table link.
 type Link internal.Link
 
-// 列表请求实体
+// 链接列表请求实体
 type ApiLinkListReq struct {
+	Sort int `p:"sort"`
+	PageNum int `p:"page"`
+	PageSize int `p:"page_size"`
+}
+
+// 链接列表输入实体
+type ServiceLinkListReq struct {
 	Sort int `p:"sort"`
 	PageNum int `p:"page"`
 	PageSize int `p:"page_size"`
@@ -22,6 +29,14 @@ type ApiLinkListReq struct {
 type ApiAddLinkReq struct {
 	LinkName  string      `p:"link_name" v:"required#请填写链接名称"`
 	LinkUrl   string      `p:"link_url"  v:"required#请填写链接地址"`
+	IconUrl   string      `p:"icon_url"`
+	Sort      int         `p:"sort"`
+}
+
+// 添加链接输入实体
+type ServiceAddLinkReq struct {
+	LinkName  string      `p:"link_name"`
+	LinkUrl   string      `p:"link_url"`
 	IconUrl   string      `p:"icon_url"`
 	Sort      int         `p:"sort"`
 }

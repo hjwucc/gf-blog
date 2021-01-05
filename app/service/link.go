@@ -16,7 +16,7 @@ type serviceLink struct {
 }
 
 // 根据条件分页查找
-func (a *serviceLink) ConditionPageList(req *model.ApiLinkListReq) (totalCount int, pageList gdb.Result, err error) {
+func (a *serviceLink) ConditionPageList(req *model.ServiceLinkListReq) (totalCount int, pageList gdb.Result, err error) {
 	M := g.DB().Table(dao.Link.Table + " a")
 	if req.Sort != 0 {
 		M = M.Where("a.sort", req.Sort)
@@ -47,7 +47,7 @@ func (a *serviceLink) ConditionPageList(req *model.ApiLinkListReq) (totalCount i
 }
 
 // 添加链接
-func (a *serviceLink) Add(req *model.ApiAddLinkReq) error {
+func (a *serviceLink) Add(req *model.ServiceAddLinkReq) error {
 	err := g.DB().Transaction(func(tx *gdb.TX) error {
 		linkEntity := &model.Link{}
 		linkEntity.Sort = req.Sort
@@ -67,7 +67,7 @@ func (a *serviceLink) Add(req *model.ApiAddLinkReq) error {
 }
 
 // 修改链接
-func (a *serviceLink) Edit(id int, req *model.ApiAddLinkReq) error {
+func (a *serviceLink) Edit(id int, req *model.ServiceAddLinkReq) error {
 	err := g.DB().Transaction(func(tx *gdb.TX) error {
 		linkEntity := &model.Link{}
 		linkEntity.LinkUrl = req.LinkUrl

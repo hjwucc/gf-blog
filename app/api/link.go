@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/util/gconv"
 	"go-gf-blog/app/model"
 	"go-gf-blog/app/service"
 	"go-gf-blog/library/response"
@@ -22,11 +23,15 @@ type apiLink struct {
 // @router  /link/conditionGetList [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiLink) ConditionPageList(r *ghttp.Request) {
-	var data *model.ApiLinkListReq
-	if err := r.Parse(&data); err != nil {
+	var apiReq *model.ApiLinkListReq
+	var serviceReq *model.ServiceLinkListReq
+	if err := r.Parse(&apiReq); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	totalCount, pageList, err := service.Link.ConditionPageList(data)
+	if err := gconv.Struct(apiReq, &serviceReq); err != nil {
+		response.JsonExit(r, 1, err.Error())
+	}
+	totalCount, pageList, err := service.Link.ConditionPageList(serviceReq)
 	if err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
@@ -44,11 +49,15 @@ func (a *apiLink) ConditionPageList(r *ghttp.Request) {
 // @router  /link/add [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiLink) Add(r *ghttp.Request) {
-	var data *model.ApiAddLinkReq
-	if err := r.Parse(&data); err != nil {
+	var apiReq *model.ApiAddLinkReq
+	var serviceReq *model.ServiceAddLinkReq
+	if err := r.Parse(&apiReq); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	if err := service.Link.Add(data); err != nil {
+	if err := gconv.Struct(apiReq, &serviceReq); err != nil {
+		response.JsonExit(r, 1, err.Error())
+	}
+	if err := service.Link.Add(serviceReq); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
 	response.JsonExit(r, 0, "链接添加成功", "success")
@@ -65,11 +74,15 @@ func (a *apiLink) Edit(r *ghttp.Request) {
 	if err != nil {
 		response.JsonExit(r, 1, "链接id不正确")
 	}
-	var data *model.ApiAddLinkReq
-	if err := r.Parse(&data); err != nil {
+	var apiReq *model.ApiAddLinkReq
+	var serviceReq *model.ServiceAddLinkReq
+	if err := r.Parse(&apiReq); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	if err := service.Link.Edit(id, data); err != nil {
+	if err := gconv.Struct(apiReq, &serviceReq); err != nil {
+		response.JsonExit(r, 1, err.Error())
+	}
+	if err := service.Link.Edit(id, serviceReq); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
 	response.JsonExit(r, 0, "链接修改成功", "success")

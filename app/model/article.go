@@ -22,6 +22,16 @@ type ApiArticlesListReq struct {
 	TagId      int    `p:"tag_id"`
 }
 
+// 文章列表输入参数实体
+type ServiceArticlesListReq struct {
+	CategoryId int    `p:"category_id"`
+	PageNum    int    `p:"page"`
+	PageSize   int    `p:"page_size"`
+	Keywords   string `p:"keywords"`
+	Status     int    `p:"status"`
+	TagId      int    `p:"tag_id"`
+}
+
 // 用于查询文章列表时返回的文章实体
 type QueryArticleList struct {
 	Id           uint        `orm:"id,primary"         json:"id"            c:"-"`             // 文章ID
@@ -93,4 +103,32 @@ type ApiPublishArticleReq struct {
 	MdContent  string `p:"md_content"  v:"required#Markdown内容错误"`
 	Author     string `p:"author"`
 	IsTop      int    `p:"is_top"`
+}
+
+// 发布文章输入参数实体
+type ServicePublishArticleReq struct {
+	Id         int    `p:"id"`
+	Title      string `p:"title"`
+	Summary    string `p:"summary"`
+	Cover      string `p:"cover"`
+	CategoryId int    `p:"category_id"`
+	Tags       string `p:"tags"`
+	From       int    `p:"from"`
+	Status     int    `p:"status"`
+	Content    string `p:"content"`
+	MdContent  string `p:"md_content"`
+	Author     string `p:"author"`
+	IsTop      int    `p:"is_top"`
+}
+
+// 更改文章属性请求实体
+type ApiUpdateArticleAttributeReq struct {
+	Type      string `p:"type"       v:"required#需要更改的文章属性类型缺失"`
+	ArticleId int    `p:"article_id" v:"required#需要更改的文章ID缺失"`
+}
+
+// 更改文章属性输入实体
+type ServiceUpdateArticleAttributeReq struct {
+	Type      string `p:"type"`
+	ArticleId int    `p:"article_id"`
 }

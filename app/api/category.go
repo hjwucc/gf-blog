@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"github.com/gogf/gf/util/gconv"
 	"go-gf-blog/app/model"
 	"go-gf-blog/app/service"
 	"go-gf-blog/library/response"
@@ -21,11 +22,15 @@ type apiCategory struct {
 // @router  /category/conditionGetList [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiCategory) ConditionQueryList(r *ghttp.Request) {
-	var data *model.ApiQueryCategoriesReq
-	if err := r.Parse(&data); err != nil {
+	var apiReq *model.ApiQueryCategoriesReq
+	var serviceReq *model.ServiceQueryCategoriesReq
+	if err := r.Parse(&apiReq); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	queryList, err := service.Category.ConditionQueryList(data)
+	if err := gconv.Struct(apiReq, &serviceReq); err != nil {
+		response.JsonExit(r, 1, err.Error())
+	}
+	queryList, err := service.Category.ConditionQueryList(serviceReq)
 	if err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
@@ -39,11 +44,15 @@ func (a *apiCategory) ConditionQueryList(r *ghttp.Request) {
 // @router  /category/add [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiCategory) Add(r *ghttp.Request) {
-	var data *model.ApiAddCategoryReq
-	if err := r.Parse(&data); err != nil {
+	var apiReq *model.ApiAddCategoryReq
+	var serviceReq *model.ServiceAddCategoryReq
+	if err := r.Parse(&apiReq); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	if err := service.Category.Add(data); err != nil {
+	if err := gconv.Struct(apiReq, &serviceReq); err != nil {
+		response.JsonExit(r, 1, err.Error())
+	}
+	if err := service.Category.Add(serviceReq); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
 	response.JsonExit(r, 0, "文章分类保存成功", "success")
@@ -72,11 +81,15 @@ func (a *apiCategory) Edit(r *ghttp.Request) {
 	if err != nil {
 		response.JsonExit(r, 1, "文章分类id不正确")
 	}
-	var data *model.ApiAddCategoryReq
-	if err := r.Parse(&data); err != nil {
+	var apiReq *model.ApiAddCategoryReq
+	var serviceReq *model.ServiceAddCategoryReq
+	if err := r.Parse(&apiReq); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	if err := service.Category.Edit(id, data); err != nil {
+	if err := gconv.Struct(apiReq, &serviceReq); err != nil {
+		response.JsonExit(r, 1, err.Error())
+	}
+	if err := service.Category.Edit(id, serviceReq); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
 	response.JsonExit(r, 0, "文章分类修改成功", "success")

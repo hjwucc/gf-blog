@@ -43,11 +43,15 @@ func (a *apiArticle) Get(r *ghttp.Request) {
 // @router  /article/conditionGetList [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiArticle) ConditionGetList(r *ghttp.Request) {
-	var data *model.ApiArticlesListReq
-	if err := r.Parse(&data); err != nil {
+	var apiReq *model.ApiArticlesListReq
+	var serviceReq *model.ServiceArticlesListReq
+	if err := r.Parse(&apiReq); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-	pageList, err := service.Article.ConditionPageList(data)
+	if err := gconv.Struct(apiReq, &serviceReq); err != nil {
+		response.JsonExit(r, 1, err.Error())
+	}
+	pageList, err := service.Article.ConditionPageList(serviceReq)
 	if err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
@@ -58,16 +62,19 @@ func (a *apiArticle) ConditionGetList(r *ghttp.Request) {
 // @summary 发布文章接口
 // @tags    文章服务
 // @produce json
-// @param   entity  body model.ApiAddArticleReq true "发布（新增、编辑）请求"
+// @param   entity  body model.ApiPublishArticleReq true "发布（新增、编辑）请求"
 // @router  /article/add [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiArticle) Publish(r *ghttp.Request) {
-	var data *model.ApiPublishArticleReq
-	if err := r.Parse(&data); err != nil {
+	var apiReq *model.ApiPublishArticleReq
+	var serviceReq *model.ServicePublishArticleReq
+	if err := r.Parse(&apiReq); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
-
-	if err := service.Article.Publish(data, gconv.Int(auth.IdentityHandler(r).(jwt.MapClaims)["id"])); err != nil {
+	if err := gconv.Struct(apiReq, &serviceReq); err != nil {
+		response.JsonExit(r, 1, err.Error())
+	}
+	if err := service.Article.Publish(serviceReq, gconv.Int(auth.IdentityHandler(r).(jwt.MapClaims)["id"])); err != nil {
 		response.JsonExit(r, 1, err.Error())
 	}
 	response.JsonExit(r, 0, "文章保存成功", "success")
@@ -89,4 +96,25 @@ func (a *apiArticle) Delete(r *ghttp.Request) {
 	}
 	response.JsonExit(r, 0, "文章删除成功", "success")
 
+}
+
+// @summary 修改文章属性(是否置顶，是否发布)接口
+// @tags    文章服务
+// @produce json
+// @param   entity  body model.ApiUpdateArticleAttributeReq true "修改请求"
+// @router  /article/updateAttributeById [POST]
+// @success 200 {object} response.JsonResponse "执行结果"
+func (a *apiArticle) UpdateAttributeById(r *ghttp.Request) {
+	var apiReq *model.ApiUpdateArticleAttributeReq
+	var serviceReq *model.ServiceUpdateArticleAttributeReq
+	if err := r.Parse(&apiReq); err != nil {
+		response.JsonExit(r, 1, err.Error())
+	}
+	if err := gconv.Struct(apiReq, &serviceReq); err != nil {
+		response.JsonExit(r, 1, err.Error())
+	}
+	if err := service.Article.UpdateAttributeById(serviceReq); err != nil {
+		response.JsonExit(r, 1, err.Error())
+	}
+	response.JsonExit(r, 0, "文章属性修改成功", "success")
 }

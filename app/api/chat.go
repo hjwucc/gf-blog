@@ -2,9 +2,9 @@ package api
 
 import (
 	"fmt"
-	"github.com/gogf/gf-demos/app/model"
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/util/gconv"
+	"go-gf-blog/app/model"
 
 	"github.com/gogf/gf/container/garray"
 	"github.com/gogf/gf/container/gmap"
@@ -47,7 +47,7 @@ func (a *apiChat) Index(r *ghttp.Request) {
 	} else {
 		view.Assign("tplMain", "chat/include/main.html")
 	}
-	r.Response.WriteTpl("chat/index.html")
+	_ = r.Response.WriteTpl("chat/index.html")
 }
 
 // @summary 设置聊天名称页面
@@ -61,17 +61,17 @@ func (a *apiChat) SetName(r *ghttp.Request) {
 		apiReq *model.ApiChatSetNameReq
 	)
 	if err := r.ParseForm(&apiReq); err != nil {
-		r.Session.Set("chat_name_error", gerror.Current(err).Error())
+		_ = r.Session.Set("chat_name_error", gerror.Current(err).Error())
 		r.Response.RedirectBack()
 	}
 	name := ghtml.Entities(apiReq.Name)
-	r.Session.Set("chat_name_temp", name)
+	_ = r.Session.Set("chat_name_temp", name)
 	if names.Contains(name) {
-		r.Session.Set("chat_name_error", "用户昵称已被占用")
+		_ = r.Session.Set("chat_name_error", "用户昵称已被占用")
 		r.Response.RedirectBack()
 	} else {
-		r.Session.Set("chat_name", name)
-		r.Session.Remove("chat_name_temp", "chat_name_error")
+		_ = r.Session.Set("chat_name", name)
+		_ = r.Session.Remove("chat_name_temp", "chat_name_error")
 		r.Response.RedirectTo("/chat")
 	}
 }
@@ -104,7 +104,7 @@ func (a *apiChat) WebSocket(r *ghttp.Request) {
 	users.Set(ws, name)
 
 	// 初始化后向所有客户端发送上线消息
-	a.writeUserListToClient()
+	_ = a.writeUserListToClient()
 
 	for {
 		// 阻塞读取WS数据
@@ -115,12 +115,12 @@ func (a *apiChat) WebSocket(r *ghttp.Request) {
 			names.Remove(name)
 			users.Remove(ws)
 			// 通知所有客户端当前用户已下线
-			a.writeUserListToClient()
+			_ = a.writeUserListToClient()
 			break
 		}
 		// JSON参数解析
 		if err := gjson.DecodeTo(msgByte, msg); err != nil {
-			a.write(ws, model.ChatMsg{
+			_ = a.write(ws, model.ChatMsg{
 				Type: "error",
 				Data: "消息格式不正确: " + err.Error(),
 				From: "",
@@ -129,7 +129,7 @@ func (a *apiChat) WebSocket(r *ghttp.Request) {
 		}
 		// 数据校验
 		if err := gvalid.CheckStruct(msg, nil); err != nil {
-			a.write(ws, model.ChatMsg{
+			_ = a.write(ws, model.ChatMsg{
 				Type: "error",
 				Data: gerror.Current(err).Error(),
 				From: "",
@@ -148,7 +148,7 @@ func (a *apiChat) WebSocket(r *ghttp.Request) {
 			// 发送间隔检查
 			intervalKey := fmt.Sprintf("%p", ws)
 			if ok, _ := cache.SetIfNotExist(intervalKey, struct{}{}, sendInterval); !ok {
-				a.write(ws, model.ChatMsg{
+				_ = a.write(ws, model.ChatMsg{
 					Type: "error",
 					Data: "您的消息发送得过于频繁，请休息下再重试",
 					From: "",
@@ -189,7 +189,7 @@ func (a *apiChat) writeGroup(msg model.ChatMsg) error {
 	}
 	users.RLockFunc(func(m map[interface{}]interface{}) {
 		for user := range m {
-			user.(*ghttp.WebSocket).WriteMessage(ghttp.WS_MSG_TEXT, []byte(b))
+			_ = user.(*ghttp.WebSocket).WriteMessage(ghttp.WS_MSG_TEXT, []byte(b))
 		}
 	})
 
