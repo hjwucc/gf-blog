@@ -102,7 +102,7 @@ func (a *apiArticle) Delete(r *ghttp.Request) {
 // @tags    文章服务
 // @produce json
 // @param   entity  body model.ApiUpdateArticleAttributeReq true "修改请求"
-// @router  /article/updateAttributeById [POST]
+// @router  /article/updateAttributeById [PUT]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiArticle) UpdateAttributeById(r *ghttp.Request) {
 	var apiReq *model.ApiUpdateArticleAttributeReq
