@@ -4,7 +4,7 @@
  Source Server         : wubazx
  Source Server Type    : MySQL
  Source Server Version : 50732
- Source Host           : 47.103.147.177:3306
+ Source Host           : xxx:3306
  Source Schema         : go_gf_blog
 
  Target Server Type    : MySQL
