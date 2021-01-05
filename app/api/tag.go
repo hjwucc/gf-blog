@@ -19,7 +19,7 @@ type apiTag struct {
 // @tags    标签服务
 // @produce json
 // @param   entity  body model.ApiAddTagReq true "新增请求"
-// @router  /tag/add [POST]
+// @router  /go-gf-blog/tag/add [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiTag) Add(r *ghttp.Request) {
 	var apiReq *model.ApiAddTagReq
@@ -36,7 +36,7 @@ func (a *apiTag) Add(r *ghttp.Request) {
 // @tags    标签服务
 // @produce json
 // @param   entity  body model.ApiDeleteTagsReq true "删除请求"
-// @router  /tag/delete [POST]
+// @router  /go-gf-blog/tag/delete [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiTag) DeleteTags(r *ghttp.Request) {
 	var apiReq *model.ApiDeleteTagsReq

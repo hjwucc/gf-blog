@@ -21,7 +21,7 @@ type apiArticle struct {
 // @tags    文章服务
 // @produce json
 // @param   id path int true "文章ID"
-// @router  /article/get [GET]
+// @router  /go-gf-blog/article/get [GET]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiArticle) Get(r *ghttp.Request) {
 	id, err := strconv.Atoi(r.GetRouterString("id"))
@@ -40,7 +40,7 @@ func (a *apiArticle) Get(r *ghttp.Request) {
 // @tags    文章服务
 // @produce json
 // @param   entity  body model.ApiArticlesListReq true "查找请求"
-// @router  /article/conditionGetList [POST]
+// @router  /go-gf-blog/article/conditionGetList [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiArticle) ConditionGetList(r *ghttp.Request) {
 	var apiReq *model.ApiArticlesListReq
@@ -63,7 +63,7 @@ func (a *apiArticle) ConditionGetList(r *ghttp.Request) {
 // @tags    文章服务
 // @produce json
 // @param   entity  body model.ApiPublishArticleReq true "发布（新增、编辑）请求"
-// @router  /article/add [POST]
+// @router  /go-gf-blog/article/publish [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiArticle) Publish(r *ghttp.Request) {
 	var apiReq *model.ApiPublishArticleReq
@@ -84,7 +84,7 @@ func (a *apiArticle) Publish(r *ghttp.Request) {
 // @tags    文章服务
 // @produce json
 // @param   id path int true "文章ID"
-// @router  /article/delete [DELETE]
+// @router  /go-gf-blog/article/delete [DELETE]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiArticle) Delete(r *ghttp.Request) {
 	id, err := strconv.Atoi(r.GetRouterString("id"))
@@ -102,7 +102,7 @@ func (a *apiArticle) Delete(r *ghttp.Request) {
 // @tags    文章服务
 // @produce json
 // @param   entity  body model.ApiUpdateArticleAttributeReq true "修改请求"
-// @router  /article/updateAttributeById [PUT]
+// @router  /go-gf-blog/article/updateAttributeById [PUT]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiArticle) UpdateAttributeById(r *ghttp.Request) {
 	var apiReq *model.ApiUpdateArticleAttributeReq

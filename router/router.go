@@ -14,7 +14,7 @@ func init() {
 	s.SetNameToUriType(ghttp.URI_TYPE_CAMEL)
 
 	s.Group("/go-gf-blog", func(group *ghttp.RouterGroup) {
-		group.ALL("/login",auth.GfJWTMiddleware.LoginHandler)
+		group.ALL("/user/login",auth.GfJWTMiddleware.LoginHandler)
 		group.ALL("/article/get/{id}",api.Article.Get)
 		group.ALL("/article/conditionGetList",api.Article.ConditionGetList)
 		group.ALL("/category/conditionGetList",api.Category.ConditionQueryList)

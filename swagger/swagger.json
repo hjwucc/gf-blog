@@ -7,37 +7,7 @@
         "version": "1.0"
     },
     "paths": {
-        "/article/add": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "文章服务"
-                ],
-                "summary": "发布文章接口",
-                "parameters": [
-                    {
-                        "description": "发布（新增、编辑）请求",
-                        "name": "entity",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.ApiPublishArticleReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "执行结果",
-                        "schema": {
-                            "$ref": "#/definitions/response.JsonResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/article/conditionGetList": {
+        "/go-gf-blog/article/conditionGetList": {
             "post": {
                 "produces": [
                     "application/json"
@@ -67,7 +37,7 @@
                 }
             }
         },
-        "/article/delete": {
+        "/go-gf-blog/article/delete": {
             "delete": {
                 "produces": [
                     "application/json"
@@ -95,7 +65,7 @@
                 }
             }
         },
-        "/article/get": {
+        "/go-gf-blog/article/get": {
             "get": {
                 "produces": [
                     "application/json"
@@ -123,7 +93,37 @@
                 }
             }
         },
-        "/article/updateAttributeById": {
+        "/go-gf-blog/article/publish": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文章服务"
+                ],
+                "summary": "发布文章接口",
+                "parameters": [
+                    {
+                        "description": "发布（新增、编辑）请求",
+                        "name": "entity",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ApiPublishArticleReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "执行结果",
+                        "schema": {
+                            "$ref": "#/definitions/response.JsonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/go-gf-blog/article/updateAttributeById": {
             "put": {
                 "produces": [
                     "application/json"
@@ -153,7 +153,7 @@
                 }
             }
         },
-        "/category/add": {
+        "/go-gf-blog/category/add": {
             "post": {
                 "produces": [
                     "application/json"
@@ -183,7 +183,7 @@
                 }
             }
         },
-        "/category/conditionGetList": {
+        "/go-gf-blog/category/conditionGetList": {
             "post": {
                 "produces": [
                     "application/json"
@@ -213,7 +213,7 @@
                 }
             }
         },
-        "/category/delete": {
+        "/go-gf-blog/category/delete": {
             "delete": {
                 "produces": [
                     "application/json"
@@ -241,7 +241,7 @@
                 }
             }
         },
-        "/category/edit": {
+        "/go-gf-blog/category/edit": {
             "put": {
                 "produces": [
                     "application/json"
@@ -269,7 +269,7 @@
                 }
             }
         },
-        "/category/fresh": {
+        "/go-gf-blog/category/fresh": {
             "post": {
                 "produces": [
                     "application/json"
@@ -288,7 +288,7 @@
                 }
             }
         },
-        "/file/delete": {
+        "/go-gf-blog/file/delete": {
             "delete": {
                 "produces": [
                     "application/json"
@@ -323,7 +323,7 @@
                 }
             }
         },
-        "/file/put": {
+        "/go-gf-blog/file/put": {
             "put": {
                 "produces": [
                     "application/json"
@@ -360,7 +360,7 @@
                 }
             }
         },
-        "/link/add": {
+        "/go-gf-blog/link/add": {
             "post": {
                 "produces": [
                     "application/json"
@@ -390,7 +390,7 @@
                 }
             }
         },
-        "/link/conditionGetList": {
+        "/go-gf-blog/link/conditionGetList": {
             "post": {
                 "produces": [
                     "application/json"
@@ -420,7 +420,7 @@
                 }
             }
         },
-        "/link/delete": {
+        "/go-gf-blog/link/delete": {
             "delete": {
                 "produces": [
                     "application/json"
@@ -448,7 +448,7 @@
                 }
             }
         },
-        "/link/edit": {
+        "/go-gf-blog/link/edit": {
             "put": {
                 "produces": [
                     "application/json"
@@ -476,7 +476,7 @@
                 }
             }
         },
-        "/tag/add": {
+        "/go-gf-blog/tag/add": {
             "post": {
                 "produces": [
                     "application/json"
@@ -506,7 +506,7 @@
                 }
             }
         },
-        "/tag/delete": {
+        "/go-gf-blog/tag/delete": {
             "post": {
                 "produces": [
                     "application/json"
@@ -536,7 +536,7 @@
                 }
             }
         },
-        "/user/checknickname": {
+        "/go-gf-blog/user/checknickname": {
             "get": {
                 "produces": [
                     "application/json"
@@ -564,7 +564,7 @@
                 }
             }
         },
-        "/user/checkpassport": {
+        "/go-gf-blog/user/checkpassport": {
             "get": {
                 "produces": [
                     "application/json"
@@ -592,7 +592,7 @@
                 }
             }
         },
-        "/user/logout": {
+        "/go-gf-blog/user/logout": {
             "post": {
                 "produces": [
                     "application/json"
@@ -611,7 +611,7 @@
                 }
             }
         },
-        "/user/signup": {
+        "/go-gf-blog/user/signup": {
             "post": {
                 "produces": [
                     "application/json"

@@ -20,7 +20,7 @@ type apiFile struct {
 // @produce json
 // @param   upload-file body string true "文件"
 // @param   target path string true "上传目标,如: upy/又拍云 qny/七牛云 aly/阿里云"
-// @router  /file/put [PUT]
+// @router  /go-gf-blog/file/put [PUT]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiFile) Put(r *ghttp.Request) {
 	fileHeader := r.GetUploadFile("upload-file")
@@ -44,7 +44,7 @@ func (a *apiFile) Put(r *ghttp.Request) {
 // @produce json
 // @param   target path string true "要删除的文件所在目标,如: upy/又拍云 qny/七牛云 aly/阿里云"
 // @param   fileName path string true "要删除的文件名"
-// @router  /file/delete [DELETE]
+// @router  /go-gf-blog/file/delete [DELETE]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiFile) Delete(r *ghttp.Request) {
 	// 要删除的文件存储在又拍云

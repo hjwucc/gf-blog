@@ -17,7 +17,7 @@ type apiUser struct{}
 // @tags    用户服务
 // @produce json
 // @param   entity body model.ApiUserSignUpReq true "注册请求"
-// @router  /user/signup [POST]
+// @router  /go-gf-blog/user/signup [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiUser) SignUp(r *ghttp.Request) {
 	var (
@@ -41,7 +41,7 @@ func (a *apiUser) SignUp(r *ghttp.Request) {
 // @tags    用户服务
 // @produce json
 // @param   passport query string true "用户账号"
-// @router  /user/checkpassport [GET]
+// @router  /go-gf-blog/user/checkpassport [GET]
 // @success 200 {object} response.JsonResponse "执行结果:`true/false`"
 func (a *apiUser) CheckPassport(r *ghttp.Request) {
 	var (
@@ -60,7 +60,7 @@ func (a *apiUser) CheckPassport(r *ghttp.Request) {
 // @tags    用户服务
 // @produce json
 // @param   nickname query string true "用户昵称"
-// @router  /user/checknickname [GET]
+// @router  /go-gf-blog/user/checknickname [GET]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiUser) CheckNickName(r *ghttp.Request) {
 	var (
@@ -78,7 +78,7 @@ func (a *apiUser) CheckNickName(r *ghttp.Request) {
 // @summary 用户退出登录接口
 // @tags    用户服务
 // @produce json
-// @router  /user/logout [POST]
+// @router  /go-gf-blog/user/logout [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiUser) Logout(r *ghttp.Request) {
 	// todo 退出前操作

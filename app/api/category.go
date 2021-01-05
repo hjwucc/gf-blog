@@ -19,7 +19,7 @@ type apiCategory struct {
 // @tags    分类服务
 // @produce json
 // @param   entity  body model.ApiQueryCategoriesReq true "查找请求"
-// @router  /category/conditionGetList [POST]
+// @router  /go-gf-blog/category/conditionGetList [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiCategory) ConditionQueryList(r *ghttp.Request) {
 	var apiReq *model.ApiQueryCategoriesReq
@@ -41,7 +41,7 @@ func (a *apiCategory) ConditionQueryList(r *ghttp.Request) {
 // @tags    分类服务
 // @produce json
 // @param   entity  body model.ApiAddCategoryReq true "新增请求"
-// @router  /category/add [POST]
+// @router  /go-gf-blog/category/add [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiCategory) Add(r *ghttp.Request) {
 	var apiReq *model.ApiAddCategoryReq
@@ -61,7 +61,7 @@ func (a *apiCategory) Add(r *ghttp.Request) {
 // @summary 刷新分类接口
 // @tags    分类服务
 // @produce json
-// @router  /category/fresh [POST]
+// @router  /go-gf-blog/category/fresh [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiCategory) Fresh(r *ghttp.Request) {
 	if err := service.Category.Fresh(); err != nil {
@@ -74,7 +74,7 @@ func (a *apiCategory) Fresh(r *ghttp.Request) {
 // @tags    分类服务
 // @produce json
 // @param   id path int true "分类ID"
-// @router  /category/edit [PUT]
+// @router  /go-gf-blog/category/edit [PUT]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiCategory) Edit(r *ghttp.Request) {
 	id, err := strconv.Atoi(r.GetRouterString("id"))
@@ -99,7 +99,7 @@ func (a *apiCategory) Edit(r *ghttp.Request) {
 // @tags    分类服务
 // @produce json
 // @param   id path int true "分类ID"
-// @router  /category/delete [DELETE]
+// @router  /go-gf-blog/category/delete [DELETE]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiCategory) Delete(r *ghttp.Request) {
 	id, err := strconv.Atoi(r.GetRouterString("id"))

@@ -20,7 +20,7 @@ type apiLink struct {
 // @tags    链接服务
 // @produce json
 // @param   entity  body model.ApiLinkListReq true "查找请求"
-// @router  /link/conditionGetList [POST]
+// @router  /go-gf-blog/link/conditionGetList [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiLink) ConditionPageList(r *ghttp.Request) {
 	var apiReq *model.ApiLinkListReq
@@ -46,7 +46,7 @@ func (a *apiLink) ConditionPageList(r *ghttp.Request) {
 // @tags    链接服务
 // @produce json
 // @param   entity  body model.ApiAddLinkReq true "新增请求"
-// @router  /link/add [POST]
+// @router  /go-gf-blog/link/add [POST]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiLink) Add(r *ghttp.Request) {
 	var apiReq *model.ApiAddLinkReq
@@ -67,7 +67,7 @@ func (a *apiLink) Add(r *ghttp.Request) {
 // @tags    链接服务
 // @produce json
 // @param   id path int true "链接ID"
-// @router  /link/edit [PUT]
+// @router  /go-gf-blog/link/edit [PUT]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiLink) Edit(r *ghttp.Request) {
 	id, err := strconv.Atoi(r.GetRouterString("id"))
@@ -92,7 +92,7 @@ func (a *apiLink) Edit(r *ghttp.Request) {
 // @tags    链接服务
 // @produce json
 // @param   id path int true "链接ID"
-// @router  /link/delete [DELETE]
+// @router  /go-gf-blog/link/delete [DELETE]
 // @success 200 {object} response.JsonResponse "执行结果"
 func (a *apiLink) Delete(r *ghttp.Request) {
 	id, err := strconv.Atoi(r.GetRouterString("id"))
